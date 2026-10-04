@@ -9,7 +9,7 @@
   color-scheme: dark;
   --bg:#0b1220; --card:#152033; --line:#2a3850;
   --text:#eff5ff; --muted:#a8b8cf; --blue:#60a5fa;
-  --green:#6ee7b7; --alert-yellow:#fde047; --alert-orange:#fb923c; --alert-red:#f87171;
+  --green:#6ee7b7;
 }
 * { box-sizing:border-box }
 body {
@@ -38,77 +38,6 @@ p { margin:6px 0 }
   background:var(--card); border:1px solid var(--line);
   border-radius:20px; padding:20px; margin-bottom:16px;
 }
-.row { display:flex; justify-content:space-between; gap:12px; align-items:center }
-.badge {
-  display:inline-block; background:#153d36; color:var(--green);
-  border-radius:30px; padding:8px 18px; font-size:16px; font-weight:bold;
-}
-
-.value-box {
-  border-radius: 16px; padding: 14px 10px; margin: 14px 0;
-  text-align: center;
-  display: flex; flex-direction: column; align-items: center; justify-content: center;
-  gap: 2px; transition: background 0.3s, border-color 0.3s;
-}
-.value-box.status-green { background: #064e3b; border: 1px solid #059669; }
-.value-box.status-yellow { background: #713f12; border: 1px solid #ca8a04; }
-.value-box.status-orange { background: #7c2d12; border: 1px solid #c2410c; }
-.value-box.status-red { background: #7f1d1d; border: 1px solid #dc2626; }
-
-.value-box.status-green .label-top { color: #a7f3d0; }
-.value-box.status-yellow .label-top { color: #fef08a; }
-.value-box.status-orange .label-top { color: #fed7aa; }
-.value-box.status-red .label-top { color: #fecaca; }
-
-.value-box .label-top { font-size: 14px; font-weight: 500; }
-.value {
-  font-size: 76px; font-weight: 800; color: #ffffff;
-  letter-spacing: -2px; display: flex; align-items: baseline; justify-content: center; gap: 8px;
-}
-.value-box.status-green span.unit-m { color: #a7f3d0; }
-.value-box.status-yellow span.unit-m { color: #fef08a; }
-.value-box.status-orange span.unit-m { color: #fed7aa; }
-.value-box.status-red span.unit-m { color: #fecaca; }
-.value span.unit-m { font-size: 30px; font-weight: 600; }
-
-.distances { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin:18px 0 }
-.distance { padding:14px 4px; border-radius:12px; text-align:center; color:#000; font-weight:600 }
-.distance div { margin-bottom:2px }
-.distance strong { font-size:20px; font-weight:800 }
-.distance .unit { font-size:12px; font-weight:600; margin-left:2px }
-.distance .sub-bottom { font-size:12px; font-weight:700; display:block }
-
-.bg-yellow { background: var(--alert-yellow); }
-.bg-orange { background: var(--alert-orange); }
-.bg-red { background: var(--alert-red); }
-
-.stats-grid {
-  display: grid; grid-template-columns: 1fr 1fr; gap: 1px;
-  background: var(--line); border: 1px solid var(--line); border-radius: 16px; overflow: hidden;
-  margin-bottom: 16px;
-}
-.stat-item {
-  background: var(--card); padding: 18px; display: flex; flex-direction: column; gap: 4px;
-}
-.stat-label { font-size: 14px; color: var(--muted); }
-.stat-value { font-size: 26px; font-weight: 800; color: #fff; }
-
-.scale { position:relative; height:290px; margin-top:20px; margin-bottom:24px; }
-.channel {
-  position:absolute; top:0; bottom:0; left:12px; width:84px;
-  background:#0b1423; border:1px solid #62728a; border-radius:10px; overflow:hidden;
-}
-.water {
-  position:absolute; bottom:0; width:100%; height:45.5%;
-  background:linear-gradient(#60a5fa,#17437b); border-top:3px solid #bfdbfe;
-  transition: height 0.5s ease;
-}
-.mark { position:absolute; left:8px; right:0; height:0; border-top:1px dashed #687a94; }
-.mark span { position:absolute; left:110px; top:-13px; padding:0 5px; background:var(--card); font-size:13px; }
-.mark.warn { border-color:#fb923c }
-.mark.danger { border-color:#f87171 }
-.mark.now { border:2px solid var(--blue); transition: bottom 0.5s ease; }
-.mark.now span { top:-16px; font-weight:700; color:#bfdbfe }
 
 .link-card {
   display: flex; align-items: center; justify-content: space-between;
@@ -124,12 +53,7 @@ p { margin:6px 0 }
   font-weight: 600; font-size: 13px; white-space: nowrap;
 }
 
-.note { font-size:12px; color:var(--muted); margin-top:12px }
 footer { font-size:12px; color:var(--muted); text-align:center; line-height: 1.8; margin-top: 24px; }
-@media(min-width:650px) {
-  .overview { display:grid; grid-template-columns:1fr 1fr; gap:16px }
-  .overview .card { margin-bottom:16px }
-}
 </style>
 </head>
 <body>
@@ -147,73 +71,15 @@ footer { font-size:12px; color:var(--muted); text-align:center; line-height: 1.8
     </button>
   </div>
 
-  <div class="overview">
-    <section class="card">
-      <div class="row">
-        <!-- เพิ่มเลขเปอร์เซ็นต์หลังหัวข้อระดับน้ำปัจจุบัน -->
-        <h2 style="margin:0">ระดับน้ำปัจจุบัน (34%)</h2>
-        <span class="badge" id="status-badge">ปกติ</span>
-      </div>
-
-      <div class="value-box status-green" id="main-value-box">
-        <div class="label-top" id="main-label-text">คลองบางจาก (ซอย 68)</div>
-        <div class="value">
-          <span id="water-level">0.41</span>
-          <span class="unit-m">ม.</span>
-        </div>
-      </div>
-
-      <p class="muted" style="text-align:center" id="water-desc">ระดับน้ำเทียบระดับน้ำทะเลปานกลาง · ล่าสุด 20:55 น.</p>
-
-      <div class="distances">
-        <div class="distance bg-yellow">
-          <div><strong style="color:#000">0.70</strong><span class="unit" style="color:#000">ม.</span></div>
-          <span class="sub-bottom" style="color:#000">เฝ้าระวัง</span>
-        </div>
-        <div class="distance bg-orange">
-          <div><strong style="color:#000">0.80</strong><span class="unit" style="color:#000">ม.</span></div>
-          <span class="sub-bottom" style="color:#000">เริ่มกังวล</span>
-        </div>
-        <div class="distance bg-red">
-          <div><strong style="color:#000">1.20</strong><span class="unit" style="color:#000">ม.</span></div>
-          <span class="sub-bottom" style="color:#000">ระดับตลิ่ง</span>
-        </div>
-      </div>
-      <small id="last-update">อ้างอิงสถานี WL.BJK.02 สำนักการระบายน้ำ กทม.</small>
-    </section>
-
-    <section class="card">
-      <h2>สเกลระดับน้ำปัจจุบัน</h2>
-      <div class="scale" role="img" aria-label="สเกลระดับน้ำคลองบางจาก">
-        <div class="channel"><div class="water" id="water-bar" style="height: 45.5%;"></div></div>
-        <div class="mark" style="bottom:100%"><span>ตลิ่ง 1.20 ม.</span></div>
-        <div class="mark danger" style="bottom:72.41%"><span style="color:#f87171">เริ่มกังวล 0.80 ม.</span></div>
-        <div class="mark warn" style="bottom:65.52%"><span style="color:#fb923c">เฝ้าระวัง 0.70 ม.</span></div>
-        <div class="mark now" id="water-mark" style="bottom: 45.5%;"><span>น้ำ <span id="water-mark-val">0.41</span> ม.</span></div>
-        <div class="mark" style="bottom:0"><span>ก้นคลอง −0.25 ม.</span></div>
-      </div>
-      <p class="note">อ้างอิงตามเกณฑ์มาตรวัดจริงของจุดซอยเพชรเกษม 68</p>
-    </section>
-  </div>
-
-  <div class="stats-grid">
-    <div class="stat-item">
-      <span class="stat-label">ตอนนี้</span>
-      <span class="stat-value">0.41 ม.</span>
+  <!-- แสดงแผนที่และข้อมูลสดจาก Longdo Water โดยตรง -->
+  <section class="card">
+    <h2 style="margin-bottom: 12px;">สถานการณ์น้ำแบบเรียลไทม์ (Longdo Water)</h2>
+    <div style="border-radius: 12px; overflow: hidden; border: 1px solid var(--line);">
+      <iframe src="https://water.longdo.com/embed?lat=13.71&lon=100.39&zoom=13"
+              style="width:100%; height:520px; border:0; display:block;" loading="lazy"
+              title="ระดับน้ำคลองและแม่น้ำ · Longdo Water"></iframe>
     </div>
-    <div class="stat-item">
-      <span class="stat-label">ตลิ่ง</span>
-      <span class="stat-value">1.20 ม.</span>
-    </div>
-    <div class="stat-item">
-      <span class="stat-label">สูงสุดวันนี้</span>
-      <span class="stat-value" style="color: var(--blue);">0.43 ม.</span>
-    </div>
-    <div class="stat-item">
-      <span class="stat-label">สูงสุดเมื่อวาน</span>
-      <span class="stat-value" style="color: var(--muted);">0.47 ม.</span>
-    </div>
-  </div>
+  </section>
 
   <section class="card">
     <h2 style="margin-bottom: 14px;">ตรวจสอบข้อมูลจริงจากหน่วยงาน</h2>
