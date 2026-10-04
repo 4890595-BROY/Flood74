@@ -1,118 +1,199 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>เฝ้าระวังน้ำ · เพชรเกษม 74</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ความเสี่ยงน้ำท่วม ซอยเพชรเกษม 74</title>
 <style>
-:root {
-  color-scheme: dark;
-  --bg:#0b1220; --card:#152033; --line:#2a3850;
-  --text:#eff5ff; --muted:#a8b8cf; --blue:#60a5fa;
-  --green:#6ee7b7;
-}
-* { box-sizing:border-box }
-body {
-  margin:0; background:var(--bg); color:var(--text);
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-  line-height:1.5;
-}
-main { max-width:760px; margin:auto; padding:22px 16px 40px }
-h1 { font-size:26px; margin:3px 0 }
-h2 { font-size:18px; margin:0 0 12px }
-p { margin:6px 0 }
-.muted,small { color:var(--muted) }
-.eyebrow { color:var(--blue); font-size:13px; letter-spacing:1px }
-.top-bar { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; }
-.refresh-btn {
-  background: var(--card); border: 1px solid var(--line); color: var(--text);
-  padding: 8px 14px; border-radius: 12px; font-size: 13px; cursor: pointer;
-  display: flex; align-items: center; gap: 6px; transition: background 0.2s;
-}
-.refresh-btn:hover { background: #1e293b; }
-.refresh-btn svg { width: 14px; height: 14px; fill: currentColor; }
-@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-.spinning { animation: spin 1s linear infinite; }
-
-.card {
-  background:var(--card); border:1px solid var(--line);
-  border-radius:20px; padding:20px; margin-bottom:16px;
-}
-
-.link-card {
-  display: flex; align-items: center; justify-content: space-between;
-  background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
-  border: 1px solid #3b82f6; border-radius: 16px; padding: 18px 20px;
-  text-decoration: none; color: var(--text); transition: transform 0.2s, border-color 0.2s;
-  margin-bottom: 12px;
-}
-.link-card:hover { transform: translateY(-2px); border-color: #60a5fa; }
-.link-info h3 { margin: 0; font-size: 16px; color: #60a5fa; }
-.link-btn {
-  background: #2563eb; color: #fff; padding: 8px 14px; border-radius: 10px;
-  font-weight: 600; font-size: 13px; white-space: nowrap;
-}
-
-footer { font-size:12px; color:var(--muted); text-align:center; line-height: 1.8; margin-top: 24px; }
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+--bg:#f4f6f9;--card:#fff;--tx:#14202e;--mut:#5d6b7a;--bd:#e1e6ec;--c13:#1565c0;--c2:#00897b}
+@media (prefers-color-scheme:dark){:root{--bg:#0e141b;--card:#18212b;--tx:#e8eef5;--mut:#92a1b1;--bd:#263140;--c13:#64b5f6;--c2:#4db6ac}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font-family:"Noto Sans Thai",system-ui,-apple-system,"Sarabun",sans-serif;line-height:1.5}
+.w{max-width:520px;margin:0 auto;padding:14px}
+h1{font-size:19px;margin:4px 0 2px}
+.sub{color:var(--mut);font-size:13px;margin-bottom:12px}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:14px;margin-bottom:12px}
+.sc{display:flex;justify-content:space-between;font-size:11px;color:var(--mut)}
+.g{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.k{font-size:12px;color:var(--mut)}
+.v{font-size:26px;font-weight:700}
+.u{font-size:12px;font-weight:400;color:var(--mut)}
+.t{font-size:12px;margin-top:2px}
+h2{font-size:15px;margin:0 0 8px}
+.sw{overflow-x:auto}
+svg{width:100%;height:auto;display:block}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th,td{padding:6px 4px;border-bottom:1px solid var(--bd);text-align:right}
+th:first-child,td:first-child{text-align:left}
+ul{margin:0;padding-left:18px;font-size:13px}
+li{margin-bottom:4px}
+.n{font-size:12px;color:var(--mut)}
+a{color:var(--c13)}
+#sum{text-align:center;padding:20px 14px;color:#fff;background:#6b7785;border-color:transparent}
+#sum .a{font-size:30px;font-weight:700;margin:4px 0}
+#sum .b{font-size:18px}
+#sum .c{margin-top:8px;font-size:13px;opacity:.9}
+.bar{position:relative;height:12px;border-radius:6px;background:var(--bd);margin:14px 0 6px}
+.bar i{position:absolute;display:block}
 </style>
 </head>
 <body>
-<main>
-  <div class="top-bar">
-    <header>
-      <div class="eyebrow">WATER WATCH · PETCHKASEM 74</div>
-      <h1>เฝ้าระวังน้ำ เพชรเกษม 74</h1>
-      <p class="muted">จุดวัดอ้างอิง: คลองบางจาก · ซอยเพชรเกษม 68</p>
-      <small>สถานี WL.BJK.02 (กทม.)</small>
-    </header>
-    <button class="refresh-btn" id="refresh-btn" onclick="triggerRefresh()">
-      <svg id="refresh-icon" viewBox="0 0 24 24"><path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg>
-      <span>รีเฟรชหน้าเว็บ</span>
-    </button>
-  </div>
+<div class="w">
+<h1>🌊 ความเสี่ยงน้ำท่วม ซอยเพชรเกษม 74</h1>
+<div class="sub">ข้อมูลอัปเดตอัตโนมัติ · ถ้าดึงไม่ได้จะบอกไว้ในแต่ละส่วน</div>
 
-  <!-- แผนที่ Longdo Water แบบซ่อนเมนูด้านบน -->
-  <section class="card">
-    <h2 style="margin-bottom: 12px;">สถานการณ์น้ำแบบเรียลไทม์ (Longdo Water)</h2>
-    <div style="border-radius: 12px; overflow: hidden; border: 1px solid var(--line);">
-      <iframe src="https://water.longdo.com/embed?lat=13.71&lon=100.39&zoom=13&ui=no"
-              style="width:100%; height:520px; border:0; display:block;" loading="lazy"
-              title="ระดับน้ำคลองและแม่น้ำ · Longdo Water"></iframe>
-    </div>
-  </section>
+<div class="card" id="sum">
+ <div class="a" id="sA">กำลังโหลดข้อมูล…</div>
+ <div class="b" id="sB">รอสักครู่</div>
+ <div class="c" id="sC"></div>
+</div>
 
-  <section class="card">
-    <h2 style="margin-bottom: 14px;">ตรวจสอบข้อมูลจริงจากหน่วยงาน</h2>
-    
-    <a href="https://weather.bangkok.go.th" target="_blank" class="link-card">
-      <div class="link-info">
-        <h3>สำนักการระบายน้ำ กรุงเทพมหานคร</h3>
-      </div>
-      <div class="link-btn">เปิดเว็บ กทม. &rarr;</div>
-    </a>
+<div class="card">
+ <div class="k">📍 คลองบางจาก ซอยเพชรเกษม 68 · สถานี WL.BJK.02</div>
+ <div class="v" style="color:var(--c2)" id="head">—</div>
+ <div class="t" id="stat"></div>
+ <div class="bar">
+  <i id="fill" style="left:0;top:0;bottom:0;width:0;border-radius:6px;background:var(--c2)"></i>
+  <i style="left:65.5%;top:-4px;width:2px;height:20px;background:#fb8c00"></i>
+  <i style="left:72.4%;top:-4px;width:2px;height:20px;background:#e53935"></i>
+ </div>
+ <div class="sc"><span>ก้นคลอง −0.25</span><span style="color:#fb8c00">เฝ้าระวัง 0.70</span><span style="color:#e53935">วิกฤต 0.80</span><span>ตลิ่ง 1.20</span></div>
+ <div class="g" style="margin-top:12px">
+  <div><div class="k">ตอนนี้</div><b id="now">—</b></div>
+  <div><div class="k">ตลิ่ง</div><b>1.20 ม.</b></div>
+  <div><div class="k">สูงสุดวันนี้</div><b id="mt">—</b></div>
+  <div><div class="k">สูงสุดเมื่อวาน</div><b id="my">—</b></div>
+ </div>
+ <div class="sw" style="margin-top:10px"><svg viewBox="0 0 360 120" id="bk" role="img" aria-label="ระดับน้ำคลองย้อนหลัง"></svg></div>
+ <div class="n" id="note">ระดับ ม.รทก. เส้นประส้ม/แดงคือระดับเฝ้าระวัง/วิกฤต</div>
+</div>
 
-    <a href="https://water.longdo.com" target="_blank" class="link-card" style="margin-bottom: 0;">
-      <div class="link-info">
-        <h3>Longdo Water (แผนที่สถานีน้ำ)</h3>
-      </div>
-      <div class="link-btn">เปิดแผนที่ &rarr;</div>
-    </a>
-  </section>
+<div class="g">
+ <div class="card"><div class="k">C.13 ท้ายเขื่อนเจ้าพระยา (ชัยนาท)</div>
+  <div class="v" style="color:var(--c13)"><span id="q13">2,500</span> <span class="u">ลบ.ม./วิ</span></div>
+  <div class="t" id="t13">เหนือเขื่อน +17.71 ม.รทก.</div></div>
+ <div class="card"><div class="k">C.2 นครสวรรค์</div>
+  <div class="v" style="color:var(--c2)"><span id="q2">2,132</span> <span class="u">ลบ.ม./วิ</span></div>
+  <div class="t" id="t2">แนวโน้มลดลง ↓</div></div>
+</div>
+<div class="n" id="damNote" style="margin:-4px 0 12px">ข้อมูลเขื่อน: 4 ต.ค. 2569 06:00 น. (กรมชลประทาน) บันทึกด้วยมือ กำลังตรวจหาข้อมูลล่าสุด…</div>
 
-  <footer>
-    ระบบแสดงผลเพื่อติดตามสถานการณ์น้ำ เพชรเกษม 74<br>
-    VERSION 1.3
-  </footer>
-</main>
+<div class="card">
+ <h2>ประวัติน้ำเขื่อน (ลบ.ม./วินาที) <span class="u">บันทึกด้วยมือ</span></h2>
+ <div class="sw"><svg viewBox="0 0 360 190" id="ch" role="img" aria-label="กราฟ C.2 และ C.13"></svg></div>
+ <div class="n"><span style="color:var(--c13)">● C.13</span> &nbsp; <span style="color:var(--c2)">● C.2</span></div>
+</div>
+
+<div class="card">
+ <h2>ตารางประวัติเขื่อน <span class="u">บันทึกด้วยมือ</span></h2>
+ <table id="tb"><tr><th>วันที่</th><th>C.2</th><th>C.13</th></tr></table>
+</div>
+
+<div class="card">
+ <h2>บางแคเกี่ยวข้องอย่างไร</h2>
+ <ul>
+  <li>น้ำจากเขื่อนเจ้าพระยาใช้เวลาหลายวันกว่าจะถึง กทม. ยิ่งระบายสูง ระดับน้ำริมเจ้าพระยาและคลองเชื่อมยิ่งสูงขึ้น</li>
+  <li>บางแคอยู่ฝั่งตะวันตก มีคลองภาษีเจริญ คลองบางแค และคลองสาขา น้ำท่วมมักมาจากฝนตกหนักรวมกับน้ำหนุนและระบายไม่ทัน</li>
+  <li>ข้อมูลเขื่อนอย่างเดียวบอกความเสี่ยงของซอยไม่ได้ครบ ให้ดูระดับน้ำคลองใกล้บ้านประกอบ</li>
+ </ul>
+</div>
+
+<div class="card n">
+ <b>ที่มา</b> ระดับน้ำคลอง: สำนักการระบายน้ำ กทม. (
+ <a href="https://weather.bangkok.go.th/water/StationDetail?id=252" target="_blank" rel="noopener">จุดวัดสด</a>)
+ · ข้อมูลเขื่อน: กรมชลประทาน (
+ <a href="https://www.rid.go.th" target="_blank" rel="noopener">rid.go.th</a>)
+</div>
+</div>
 
 <script>
-  function triggerRefresh() {
-    const icon = document.getElementById("refresh-icon");
-    if(icon) icon.classList.add("spinning");
-    setTimeout(() => {
-      window.location.reload();
-    }, 400);
-  }
+var BANK=1.20,WARN=.70,CRIT=.80,BED=-.25;
+function $(i){return document.getElementById(i)}
+function lab(s){var m=s.match(/(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})/);return (+m[3])+"/"+(+m[2])+" "+m[4]+":"+m[5]}
+function f2(v){return v==null?"—":v.toFixed(2)+" ม."}
+
+function summary(bg,a,b,c){$("sum").style.background=bg;$("sA").textContent=a;$("sB").textContent=b;$("sC").textContent=c||""}
+
+function fail(){
+ summary("#6b7785","ยังดึงข้อมูลไม่ได้","ลองเปิดหน้านี้ใหม่อีกครั้ง","หรือดูจุดวัดสดที่ลิงก์ท้ายหน้า");
+ $("head").textContent="—";
+}
+
+function chart(series){
+ var s=$("bk"),W=360,H=120,pl=36,pr=8,pt=8,pb=22;
+ var pts=series.filter(function(_,i){return i%12===0||i===series.length-1});
+ if(pts.length<2){s.innerHTML="";return}
+ var vs=pts.map(function(p){return p[1]});
+ var lo=Math.min(.3,Math.min.apply(null,vs)-.05),hi=Math.max(.85,Math.max.apply(null,vs)+.05);
+ function X(i){return pl+i*(W-pl-pr)/(pts.length-1)}
+ function Y(v){return pt+(hi-v)*(H-pt-pb)/(hi-lo)}
+ var h="";
+ [.4,.6,.8].forEach(function(g){if(g>lo&&g<hi)h+='<line x1="'+pl+'" x2="'+(W-pr)+'" y1="'+Y(g)+'" y2="'+Y(g)+'" stroke="var(--bd)"/><text x="'+(pl-4)+'" y="'+(Y(g)+4)+'" font-size="10" text-anchor="end" fill="var(--mut)">'+g.toFixed(2)+'</text>'});
+ h+='<line x1="'+pl+'" x2="'+(W-pr)+'" y1="'+Y(WARN)+'" y2="'+Y(WARN)+'" stroke="#fb8c00" stroke-dasharray="5 3" stroke-width="1.5"/><line x1="'+pl+'" x2="'+(W-pr)+'" y1="'+Y(CRIT)+'" y2="'+Y(CRIT)+'" stroke="#e53935" stroke-dasharray="5 3" stroke-width="1.5"/>';
+ h+='<path d="'+pts.map(function(p,i){return (i?"L":"M")+X(i)+" "+Y(p[1])}).join("")+'" fill="none" stroke="var(--c2)" stroke-width="2.5"/>';
+ h+='<circle cx="'+X(pts.length-1)+'" cy="'+Y(pts[pts.length-1][1])+'" r="4" fill="var(--c2)"/>';
+ [[0,"start"],[Math.floor((pts.length-1)/2),"middle"],[pts.length-1,"end"]].forEach(function(a){h+='<text x="'+X(a[0])+'" y="'+(H-6)+'" font-size="10" text-anchor="'+a[1]+'" fill="var(--mut)">'+lab(pts[a[0]][0])+'</text>'});
+ s.innerHTML=h;
+}
+
+function render(d){
+ var L=d.level,toBank=Math.round((BANK-L)*100),toWarn=Math.round((WARN-L)*100);
+ var ageMin=(Date.now()-new Date(d.latestT+":00+07:00").getTime())/60000;
+ var cStale=ageMin>90?"⚠ ข้อมูลเก่า ล่าสุดเมื่อ "+lab(d.latestT)+" น.":"ข้อมูล "+lab(d.latestT)+" น.";
+ if(L>=BANK){summary("#c62828","น้ำล้นตลิ่ง","ระวังตัวและติดตามประกาศ กทม.",cStale);$("stat").textContent="● ระดับน้ำเกินตลิ่ง"}
+ else if(L>=CRIT){summary("#c62828","ระวัง น้ำสูง","น้ำในคลองท้ายซอยสูงมาก ควรเตรียมพร้อม",cStale);$("stat").textContent="● วิกฤต · เหลืออีก "+toBank+" ซม. ถึงตลิ่ง"}
+ else if(L>=WARN){summary("#b26a00","ควรติดตามดู","น้ำในคลองท้ายซอยเริ่มสูง แต่ยังไม่ล้นตลิ่ง",cStale);$("stat").textContent="● เฝ้าระวัง · เหลืออีก "+toBank+" ซม. ถึงตลิ่ง"}
+ else{summary("#2e7d32","ตอนนี้ปกติ","น้ำในคลองท้ายซอยยังต่ำ ยังห่างตลิ่งมาก",cStale);$("stat").innerHTML='<span style="color:#43a047">●</span> ปกติ · อีก '+toWarn+' ซม. ถึงระดับเฝ้าระวัง'}
+ $("head").innerHTML="เหลือ "+Math.max(toBank,0)+' <span class="u">ซม. ถึงตลิ่ง</span>';
+ $("fill").style.width=Math.max(0,Math.min(100,(L-BED)/(BANK-BED)*100))+"%";
+ $("now").textContent=f2(L);$("mt").textContent=f2(d.maxToday);$("my").textContent=f2(d.maxYesterday);
+ $("note").textContent="ระดับ ม.รทก. ย้อนหลัง 2 วัน · เส้นประส้ม/แดงคือระดับเฝ้าระวัง/วิกฤต · "+cStale;
+ chart(d.series);
+}
+
+fetch("/api/canal").then(function(r){return r.ok?r.json():Promise.reject()}).then(render).catch(fail);
+setInterval(function(){fetch("/api/canal").then(function(r){return r.ok?r.json():Promise.reject()}).then(render).catch(function(){})},300000);
+
+
+function nf(v){return Math.round(v).toLocaleString()}
+function arrow(t){return t==="เพิ่มขึ้น"?"แนวโน้มเพิ่มขึ้น ↑":t==="ลดลง"?"แนวโน้มลดลง ↓":t?"แนวโน้ม"+t+" →":""}
+function bkk(iso){var d=new Date(new Date(iso).getTime()+7*3600000);var p=function(n){return String(n).padStart(2,"0")};return d.getUTCDate()+"/"+(d.getUTCMonth()+1)+" "+p(d.getUTCHours())+":"+p(d.getUTCMinutes())}
+function loadDam(){
+ fetch("/api/dam").then(function(r){return r.ok?r.json():Promise.reject()}).then(function(d){
+  var ts=[],old=false;
+  [["c13","q13","t13"],["c2","q2","t2"]].forEach(function(a){
+   var x=d[a[0]];if(!x||x.q==null)return;
+   $(a[1]).textContent=nf(x.q);
+   $(a[2]).textContent=arrow(x.trend)+(x.wl!=null?" · ระดับ "+x.wl.toFixed(2)+" ม.รทก.":"");
+   if(x.timeUtc){ts.push(bkk(x.timeUtc));if(Date.now()-new Date(x.timeUtc).getTime()>6*3600000)old=true}
+  });
+  $("damNote").textContent=ts.length?(old?"⚠ ข้อมูลเขื่อนเก่า ล่าสุด ":"ข้อมูลเขื่อนล่าสุด ")+ts[0]+" น. (กรมชลประทาน อัปเดตอัตโนมัติ)":"ดึงข้อมูลเขื่อนอัตโนมัติไม่ได้ ใช้ค่าที่บันทึกด้วยมือ (4 ต.ค. 06:00 น.)";
+ }).catch(function(){$("damNote").textContent="ดึงข้อมูลเขื่อนอัตโนมัติไม่ได้ ใช้ค่าที่บันทึกด้วยมือ (4 ต.ค. 06:00 น.)"});
+}
+loadDam();setInterval(loadDam,900000);
+
+/* ===== ประวัติเขื่อน (บันทึกด้วยมือ) ===== */
+var D=[
+ {d:"23 ก.ย.",c2:1737,c13:1620},
+ {d:"29 ก.ย.",c2:2141,c13:2000},
+ {d:"1 ต.ค.",c2:2610,c13:2300},
+ {d:"2 ต.ค.",c2:2416,c13:2500},
+ {d:"4 ต.ค.",c2:2132,c13:2500}
+];
+var tb=$("tb");
+D.slice().reverse().forEach(function(r){var tr=tb.insertRow();tr.insertCell().textContent=r.d;tr.insertCell().textContent=r.c2.toLocaleString();tr.insertCell().textContent=r.c13.toLocaleString();});
+var s=$("ch"),W=360,H=190,pl=38,pr=10,pt=10,pb=28,mn=1400,mx=2800;
+function X(i){return pl+i*(W-pl-pr)/(D.length-1)}
+function Y(v){return pt+(mx-v)*(H-pt-pb)/(mx-mn)}
+var h="";
+[1500,2000,2500].forEach(function(g){h+='<line x1="'+pl+'" x2="'+(W-pr)+'" y1="'+Y(g)+'" y2="'+Y(g)+'" stroke="var(--bd)"/><text x="'+(pl-4)+'" y="'+(Y(g)+4)+'" font-size="10" text-anchor="end" fill="var(--mut)">'+g+'</text>'});
+function path(k,c){var p=D.map(function(r,i){return (i?"L":"M")+X(i)+" "+Y(r[k])}).join("");
+ var dots=D.map(function(r,i){return '<circle cx="'+X(i)+'" cy="'+Y(r[k])+'" r="3.5" fill="'+c+'"/>'}).join("");
+ return '<path d="'+p+'" fill="none" stroke="'+c+'" stroke-width="2.5"/>'+dots}
+h+=path("c2","var(--c2)")+path("c13","var(--c13)");
+D.forEach(function(r,i){h+='<text x="'+X(i)+'" y="'+(H-8)+'" font-size="10" text-anchor="middle" fill="var(--mut)">'+r.d+'</text>'});
+s.innerHTML=h;
 </script>
 </body>
 </html>
