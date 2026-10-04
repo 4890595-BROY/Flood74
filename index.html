@@ -44,7 +44,6 @@ p { margin:6px 0 }
   border-radius:30px; padding:8px 18px; font-size:16px; font-weight:bold;
 }
 
-/* สไตล์กล่องระดับน้ำหลักแบบเปลี่ยนสีได้ตามเกณฑ์ */
 .value-box {
   border-radius: 16px; padding: 14px 10px; margin: 14px 0;
   text-align: center;
@@ -151,7 +150,7 @@ svg { display:block; width:100%; height:auto }
 .gate strong { font-size:18px; display:block; color:var(--blue) }
 .gate .val-big { font-size:24px; font-weight:bold; margin:6px 0 }
 .note { font-size:12px; color:var(--muted); margin-top:12px }
-footer { font-size:12px; color:var(--muted); text-align:center }
+footer { font-size:12px; color:var(--muted); text-align:center; line-height: 1.8; }
 @media(min-width:650px) {
   .overview { display:grid; grid-template-columns:1fr 1fr; gap:16px }
   .overview .card { margin-bottom:16px }
@@ -180,7 +179,6 @@ footer { font-size:12px; color:var(--muted); text-align:center }
         <span class="badge" id="status-badge">ปกติ</span>
       </div>
 
-      <!-- กล่องแสดงระดับน้ำหลัก ที่ปรับสีตามระดับน้ำ -->
       <div class="value-box status-green" id="main-value-box">
         <div class="label-top" id="main-label-text">ระดับน้ำปัจจุบัน</div>
         <div class="value">
@@ -198,7 +196,7 @@ footer { font-size:12px; color:var(--muted); text-align:center }
         </div>
         <div class="distance bg-orange">
           <div><strong style="color:#000" id="dist-danger">อีก 38</strong><span class="unit" style="color:#000">ซม.</span></div>
-          <span class="sub-bottom" style="color:#000">ถึงวิกฤต</span>
+          <span class="sub-bottom" style="color:#000">ถึงเริ่มกังวล</span>
         </div>
         <div class="distance bg-red">
           <div><strong style="color:#000" id="dist-bank">อีก 78</strong><span class="unit" style="color:#000">ซม.</span></div>
@@ -213,7 +211,7 @@ footer { font-size:12px; color:var(--muted); text-align:center }
       <div class="scale" role="img" aria-label="สเกลระดับน้ำคลองบางจาก">
         <div class="channel"><div class="water" id="water-bar" style="height:46.21%;"></div></div>
         <div class="mark" style="bottom:100%"><span>ตลิ่ง 1.20 ม.</span></div>
-        <div class="mark danger" style="bottom:72.41%"><span style="color:#f87171">วิกฤต 0.80 ม.</span></div>
+        <div class="mark danger" style="bottom:72.41%"><span style="color:#f87171">เริ่มกังวล 0.80 ม.</span></div>
         <div class="mark warn" style="bottom:65.52%"><span style="color:#fb923c">เฝ้าระวัง 0.70 ม.</span></div>
         <div class="mark now" id="water-mark" style="bottom:46.21%"><span>น้ำ <span id="water-mark-val">0.42</span> ม.</span></div>
         <div class="mark" style="bottom:0"><span>ก้นคลอง −0.25 ม.</span></div>
@@ -251,7 +249,7 @@ footer { font-size:12px; color:var(--muted); text-align:center }
               fill="none" stroke="#60a5fa" stroke-width="3"/>
         <circle cx="540" cy="130" r="5" fill="#60a5fa"/>
         <g font-family="system-ui,sans-serif" font-size="12">
-          <text x="535" y="67" text-anchor="end" fill="#f87171">วิกฤต 0.80</text>
+          <text x="535" y="67" text-anchor="end" fill="#f87171">เริ่มกังวล 0.80</text>
           <text x="535" y="107" text-anchor="end" fill="#fb923c">เฝ้าระวัง 0.70</text>
         </g>
       </svg>
@@ -259,7 +257,7 @@ footer { font-size:12px; color:var(--muted); text-align:center }
     <div class="legend">
       <span class="blue">― ระดับน้ำจริง</span>
       <span style="color:#fb923c">-- เฝ้าระวัง (0.70)</span>
-      <span style="color:#f87171">-- วิกฤต (0.80)</span>
+      <span style="color:#f87171">-- เริ่มกังวล (0.80)</span>
     </div>
   </section>
 
@@ -323,7 +321,7 @@ footer { font-size:12px; color:var(--muted); text-align:center }
           <circle cx="540" cy="110" r="4" fill="#34d399"/>
 
           <g font-family="system-ui,sans-serif" font-size="10">
-            <text x="535" y="42" text-anchor="end" fill="#dc2626">วิกฤต 3,000</text>
+            <text x="535" y="42" text-anchor="end" fill="#dc2626">เริ่มกังวล 3,000</text>
             <text x="535" y="102" text-anchor="end" fill="#ca8a04">เฝ้าระวัง 2,500</text>
           </g>
         </svg>
@@ -332,14 +330,15 @@ footer { font-size:12px; color:var(--muted); text-align:center }
         <span style="color:#60a5fa">― C.2 นครสวรรค์</span>
         <span style="color:#34d399">― C.13 เขื่อนเจ้าพระยา</span>
         <span style="color:#ca8a04">-- เฝ้าระวัง (2,500)</span>
-        <span style="color:#dc2626">-- วิกฤต (3,000)</span>
+        <span style="color:#dc2626">-- เริ่มกังวล (3,000)</span>
       </div>
     </div>
     <p class="note">ข้อมูลจากศูนย์ปฏิบัติการน้ำอัจฉริยะ (SWOC) อัปเดตรายวันสำหรับประเมินภาพรวมน้ำหลากลุ่มเจ้าพระยา</p>
   </section>
 
   <footer>
-    ระบบแสดงผลเพื่อติดตามสถานการณ์น้ำ · พัฒนาสำหรับใช้งานบนมือถือ (Mobile-first)
+    ระบบแสดงผลเพื่อติดตามสถานการณ์น้ำ เพชรเกษม 74<br>
+    VERSION 1.0
   </footer>
 </main>
 
@@ -351,7 +350,6 @@ footer { font-size:12px; color:var(--muted); text-align:center }
     return "status-red";
   }
 
-  // ฟังก์ชันคำนวณสีการ์ดระดับน้ำปัจจุบันตามเกณฑ์ (เฝ้าระวัง 0.70 = เหลือง, วิกฤต 0.80 = ส้ม, ตลิ่ง 1.20 = แดง)
   function getWaterLevelStatusClass(level) {
     if (level >= 1.20) return "status-red";
     if (level >= 0.80) return "status-orange";
@@ -392,7 +390,6 @@ footer { font-size:12px; color:var(--muted); text-align:center }
     document.getElementById("water-level").innerText = data.level.toFixed(2);
     document.getElementById("water-mark-val").innerText = data.level.toFixed(2);
 
-    // เปลี่ยนสีการ์ดระดับน้ำปัจจุบันตามค่าที่วัดได้
     const mainBox = document.getElementById("main-value-box");
     mainBox.className = "value-box " + getWaterLevelStatusClass(data.level);
 
