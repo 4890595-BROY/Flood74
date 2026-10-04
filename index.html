@@ -47,6 +47,7 @@ a{color:var(--c13)}
  <div class="a" id="sA">กำลังโหลดข้อมูล…</div>
  <div class="b" id="sB">รอสักครู่</div>
  <div class="c" id="sC"></div>
+ <div class="c" style="font-size:11px;margin-top:4px">ประเมินจากระดับน้ำที่จุดวัด ไม่ใช่ประกาศเตือนภัยทางการ</div>
 </div>
 
 <div class="card">
@@ -55,18 +56,19 @@ a{color:var(--c13)}
  <div class="t" id="stat"></div>
  <div class="bar">
   <i id="fill" style="left:0;top:0;bottom:0;width:0;border-radius:6px;background:var(--c2)"></i>
-  <i style="left:65.5%;top:-4px;width:2px;height:20px;background:#fb8c00"></i>
-  <i style="left:72.4%;top:-4px;width:2px;height:20px;background:#e53935"></i>
+  <i id="mWarn" style="left:65.5%;top:-4px;width:2px;height:20px;background:#fb8c00"></i>
+  <i id="mCrit" style="left:72.4%;top:-4px;width:2px;height:20px;background:#e53935"></i>
  </div>
- <div class="sc"><span>ก้นคลอง −0.25</span><span style="color:#fb8c00">เฝ้าระวัง 0.70</span><span style="color:#e53935">วิกฤต 0.80</span><span>ตลิ่ง 1.20</span></div>
+ <div class="sc"><span id="lBed">ก้นคลอง −0.25</span><span id="lWarn" style="color:#fb8c00">เฝ้าระวัง 0.70</span><span id="lCrit" style="color:#e53935">วิกฤต 0.80</span><span id="lBank">ตลิ่ง 1.20</span></div>
  <div class="g" style="margin-top:12px">
   <div><div class="k">ตอนนี้</div><b id="now">—</b></div>
-  <div><div class="k">ตลิ่ง</div><b>1.20 ม.</b></div>
+  <div><div class="k">ตลิ่ง</div><b id="bankV">1.20 ม.</b></div>
   <div><div class="k">สูงสุดวันนี้</div><b id="mt">—</b></div>
   <div><div class="k">สูงสุดเมื่อวาน</div><b id="my">—</b></div>
  </div>
  <div class="sw" style="margin-top:10px"><svg viewBox="0 0 360 120" id="bk" role="img" aria-label="ระดับน้ำคลองย้อนหลัง"></svg></div>
  <div class="n" id="note">ระดับ ม.รทก. เส้นประส้ม/แดงคือระดับเฝ้าระวัง/วิกฤต</div>
+ <div class="n" style="margin-top:6px">ข้อมูล: สำนักการระบายน้ำ กรุงเทพมหานคร ผ่าน <a href="https://flood.pop.in.th" target="_blank" rel="noopener">POPNIX Flood (flood.pop.in.th)</a> · ไม่ใช่ประกาศเตือนภัยทางการ</div>
 </div>
 
 <div class="g">
@@ -100,8 +102,8 @@ a{color:var(--c13)}
 </div>
 
 <div class="card n">
- <b>ที่มา</b> ระดับน้ำคลอง: สำนักการระบายน้ำ กทม. (
- <a href="https://weather.bangkok.go.th/water/StationDetail?id=252" target="_blank" rel="noopener">จุดวัดสด</a>)
+ <b>ที่มา</b> ระดับน้ำคลอง: สำนักการระบายน้ำ กรุงเทพมหานคร ผ่าน <a href="https://flood.pop.in.th" target="_blank" rel="noopener">POPNIX Flood</a> (
+ <a href="https://weather.bangkok.go.th/water/StationDetail?id=252" target="_blank" rel="noopener">จุดวัดต้นทาง</a>)
  · ข้อมูลเขื่อน: กรมชลประทาน (
  <a href="https://www.rid.go.th" target="_blank" rel="noopener">rid.go.th</a>)
 </div>
@@ -109,6 +111,7 @@ a{color:var(--c13)}
 
 <script>
 var BANK=1.20,WARN=.70,CRIT=.80,BED=-.25;
+function num(v,d){return typeof v==="number"&&isFinite(v)?v:d}
 function $(i){return document.getElementById(i)}
 function lab(s){var m=s.match(/(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})/);return (+m[3])+"/"+(+m[2])+" "+m[4]+":"+m[5]}
 function f2(v){return v==null?"—":v.toFixed(2)+" ม."}
@@ -139,6 +142,10 @@ function chart(series){
 }
 
 function render(d){
+ BANK=num(d.bank,BANK);WARN=num(d.warn,WARN);CRIT=num(d.crit,CRIT);BED=num(d.bed,BED);
+ var span=BANK-BED;
+ $("mWarn").style.left=((WARN-BED)/span*100)+"%";$("mCrit").style.left=((CRIT-BED)/span*100)+"%";
+ $("lBed").textContent="ก้นคลอง "+BED.toFixed(2);$("lWarn").textContent="เฝ้าระวัง "+WARN.toFixed(2);$("lCrit").textContent="วิกฤต "+CRIT.toFixed(2);$("lBank").textContent="ตลิ่ง "+BANK.toFixed(2);$("bankV").textContent=BANK.toFixed(2)+" ม.";
  var L=d.level,toBank=Math.round((BANK-L)*100),toWarn=Math.round((WARN-L)*100);
  var ageMin=(Date.now()-new Date(d.latestT+":00+07:00").getTime())/60000;
  var cStale=ageMin>90?"⚠ ข้อมูลเก่า ล่าสุดเมื่อ "+lab(d.latestT)+" น.":"ข้อมูล "+lab(d.latestT)+" น.";
@@ -149,7 +156,7 @@ function render(d){
  $("head").innerHTML="เหลือ "+Math.max(toBank,0)+' <span class="u">ซม. ถึงตลิ่ง</span>';
  $("fill").style.width=Math.max(0,Math.min(100,(L-BED)/(BANK-BED)*100))+"%";
  $("now").textContent=f2(L);$("mt").textContent=f2(d.maxToday);$("my").textContent=f2(d.maxYesterday);
- $("note").textContent="ระดับ ม.รทก. ย้อนหลัง 2 วัน · เส้นประส้ม/แดงคือระดับเฝ้าระวัง/วิกฤต · "+cStale;
+ $("note").textContent="ระดับ ม.รทก. ย้อนหลัง 3 วัน · เส้นประส้ม/แดงคือระดับเฝ้าระวัง/วิกฤต · "+cStale+" · ไม่ใช่ประกาศทางการ";
  chart(d.series);
 }
 
