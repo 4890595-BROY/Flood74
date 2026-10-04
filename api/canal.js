@@ -28,6 +28,26 @@ function findStation(list) {
   );
 }
 
+// ค่าต่ำสุดของวัน: ใช้ mn (ต่ำสุดของช่วง) ถ้า API ส่งมา ไม่เช่นนั้นใช้ wl
+function dayMin(raw, day) {
+  let m = null;
+  for (const p of raw) {
+    if (String(p.t).slice(0, 10) !== day) continue;
+    const v = Number(p.mn != null ? p.mn : p.wl);
+    if (Number.isFinite(v) && (m === null || v < m)) m = v;
+  }
+  return m;
+}
+function prevDay(day) {
+  const d = new Date(day + "T00:00:00Z");
+  d.setUTCDate(d.getUTCDate() - 1);
+  return d.toISOString().slice(0, 10);
+}
+function minToday(raw, day, level) {
+  const m = dayMin(raw, day);
+  return m === null ? null : Math.min(m, level);
+}
+
 async function fromPop() {
   const H = { Accept: "application/json", "User-Agent": "flood-dashboard-personal/1.0" };
   const r = await get(POP + "/api_overview.php?w=60", { headers: H });
@@ -38,11 +58,13 @@ async function fromPop() {
   if (st.wl == null || !st.measured_at) throw new Error("จุดวัดไม่ส่งค่าตอนนี้");
   const latestT = toIso(st.measured_at);
   let series = [[latestT, Number(st.wl)]];
+  let raw = null;
   try {
     const hr = await get(POP + "/api_history.php?id=" + encodeURIComponent(st.id) + "&h=168", { headers: H });
     if (hr.ok) {
       const h = await hr.json();
-      const pts = (h.points || []).filter((p) => p.wl != null).map((p) => [toIso(p.t), Number(p.wl)]);
+      raw = (h.points || []).filter((p) => p.wl != null);
+      const pts = raw.map((p) => [toIso(p.t), Number(p.wl)]);
       if (pts.length) {
         if (pts[pts.length - 1][0] < latestT) pts.push([latestT, Number(st.wl)]);
         series = pts;
@@ -55,6 +77,8 @@ async function fromPop() {
     level: Number(st.wl),
     maxToday: st.max_day == null ? null : Number(st.max_day),
     maxYesterday: st.max_yday == null ? null : Number(st.max_yday),
+    minToday: raw && raw.length ? minToday(raw, latestT.slice(0, 10), Number(st.wl)) : null,
+    minYesterday: raw && raw.length ? dayMin(raw, prevDay(latestT.slice(0, 10))) : null,
     warn: st.warn == null ? null : Number(st.warn),
     crit: st.crit == null ? null : Number(st.crit),
     bed: st.bed == null ? null : Number(st.bed),
@@ -82,11 +106,10 @@ function parse(html) {
   const prev = new Date(day + "T00:00:00Z");
   prev.setUTCDate(prev.getUTCDate() - 1);
   const prevDay = prev.toISOString().slice(0, 10);
-  const maxOf = (d) => {
-    const v = series.filter(([t]) => t.startsWith(d)).map(([, l]) => l);
-    return v.length ? Math.max(...v) : null;
-  };
-  return { source: "bma", latestT, level, maxToday: maxOf(day), maxYesterday: maxOf(prevDay), series };
+  const vals = (d) => series.filter(([t]) => t.startsWith(d)).map(([, l]) => l);
+  const maxOf = (d) => (vals(d).length ? Math.max(...vals(d)) : null);
+  const minOf = (d) => (vals(d).length ? Math.min(...vals(d)) : null);
+  return { source: "bma", latestT, level, maxToday: maxOf(day), maxYesterday: maxOf(prevDay), minToday: minOf(day), minYesterday: minOf(prevDay), series };
 }
 
 async function fromBma() {

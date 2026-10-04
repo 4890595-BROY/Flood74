@@ -17,6 +17,7 @@ h1{font-size:19px;margin:4px 0 2px}
 .sc{display:flex;justify-content:space-between;font-size:11px;color:var(--mut)}
 .g{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .k{font-size:12px;color:var(--mut)}
+.k2{font-size:11px;color:var(--mut);line-height:1.3}
 .v{font-size:26px;font-weight:700}
 .u{font-size:12px;font-weight:400;color:var(--mut)}
 .t{font-size:12px;margin-top:2px}
@@ -67,11 +68,14 @@ a{color:var(--c13)}
    <div id="gWarn" style="position:absolute;left:0;bottom:65%;transform:translateY(50%);display:flex;align-items:center;gap:6px;color:#fb8c00;font-weight:600"><i style="width:12px;height:2px;background:#fb8c00"></i><span id="lWarn">เฝ้าระวัง 0.70</span></div>
    <div id="gBed" style="position:absolute;left:0;bottom:0;transform:translateY(50%);display:flex;align-items:center;gap:6px;color:var(--mut)"><i style="width:12px;height:2px;background:var(--mut)"></i><span id="lBed">ก้นคลอง −0.25</span></div>
   </div>
-  <div style="flex:1;min-width:0;height:300px;display:flex;flex-direction:column;justify-content:space-around">
-   <div><div class="k">ตอนนี้</div><b id="now" style="font-size:20px">—</b></div>
-   <div><div class="k">ตลิ่ง</div><b id="bankV" style="font-size:20px">1.20 ม.</b></div>
-   <div><div class="k">สูงสุดวันนี้</div><b id="mt" style="font-size:20px">—</b></div>
-   <div><div class="k">สูงสุดเมื่อวาน</div><b id="my" style="font-size:20px">—</b></div>
+  <div style="flex:1;min-width:0;height:300px;display:flex;flex-direction:column;justify-content:space-between">
+   <div><div class="k">ตอนนี้</div><b id="now" style="font-size:40px;line-height:1.1">—</b></div>
+   <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px 8px">
+    <div><div class="k2">สูงสุดวันนี้</div><b id="mt" style="font-size:17px">—</b></div>
+    <div><div class="k2">ต่ำสุดวันนี้</div><b id="lt" style="font-size:17px">—</b></div>
+    <div><div class="k2">สูงสุดเมื่อวาน</div><b id="my" style="font-size:17px">—</b></div>
+    <div><div class="k2">ต่ำสุดเมื่อวาน</div><b id="ly" style="font-size:17px">—</b></div>
+   </div>
   </div>
  </div>
   <div class="sw" style="margin-top:10px"><svg viewBox="0 0 360 120" id="bk" role="img" aria-label="ระดับน้ำคลองย้อนหลัง"></svg></div>
@@ -158,7 +162,7 @@ function render(d){
  function pct(v){return Math.max(0,Math.min(100,(v-BED)/(BANK-BED)*100))}
  $("vWarn").style.bottom=pct(WARN)+"%";$("vCrit").style.bottom=pct(CRIT)+"%";
  $("gWarn").style.bottom=pct(WARN)+"%";$("gCrit").style.bottom=pct(CRIT)+"%";
- $("lBed").textContent="ก้นคลอง "+BED.toFixed(2);$("lWarn").textContent="เฝ้าระวัง "+WARN.toFixed(2);$("lCrit").textContent="วิกฤต "+CRIT.toFixed(2);$("lBank").textContent="ตลิ่ง "+BANK.toFixed(2);$("bankV").textContent=BANK.toFixed(2)+" ม.";
+ $("lBed").textContent="ก้นคลอง "+BED.toFixed(2);$("lWarn").textContent="เฝ้าระวัง "+WARN.toFixed(2);$("lCrit").textContent="วิกฤต "+CRIT.toFixed(2);$("lBank").textContent="ตลิ่ง "+BANK.toFixed(2);
  var L=d.level,toBank=Math.round((BANK-L)*100),toWarn=Math.round((WARN-L)*100);
  var ageMin=(Date.now()-new Date(d.latestT+":00+07:00").getTime())/60000;
  var cStale=ageMin>90?"⚠ ข้อมูลเก่า ล่าสุดเมื่อ "+lab(d.latestT)+" น.":"ข้อมูล "+lab(d.latestT)+" น.";
@@ -168,7 +172,7 @@ function render(d){
  else{summary("#2e7d32","ตอนนี้ปกติ","น้ำในคลองท้ายซอยยังต่ำ ยังห่างตลิ่งมาก",cStale);$("stat").innerHTML='<span style="color:#43a047">●</span> ปกติ · อีก '+toWarn+' ซม. ถึงระดับเฝ้าระวัง'}
  $("head").innerHTML="เหลือ "+Math.max(toBank,0)+' <span class="u">ซม. ถึงตลิ่ง</span>';
  $("vFill").style.height=pct(L)+"%";$("vFill").style.background=L>=CRIT?"#e53935":L>=WARN?"#fb8c00":"var(--c2)";$("vNow").style.bottom=pct(L)+"%";$("vNow").textContent=L.toFixed(2);
- $("now").textContent=f2(L);$("mt").textContent=f2(d.maxToday);$("my").textContent=f2(d.maxYesterday);
+ $("now").innerHTML=L.toFixed(2)+' <span style="font-size:16px;font-weight:400">ม.</span>';$("mt").textContent=f2(d.maxToday);$("my").textContent=f2(d.maxYesterday);$("lt").textContent=f2(d.minToday);$("ly").textContent=f2(d.minYesterday);
  $("note").textContent="ระดับ ม.รทก. ย้อนหลัง 7 วัน · เส้นประส้ม/แดงคือระดับเฝ้าระวัง/วิกฤต · "+cStale+" · ไม่ใช่ประกาศทางการ";
  chart(d.series);
 }
