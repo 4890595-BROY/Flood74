@@ -54,19 +54,27 @@ a{color:var(--c13)}
  <div class="k">📍 คลองบางจาก ซอยเพชรเกษม 68 · สถานี WL.BJK.02</div>
  <div class="v" style="color:var(--c2)" id="head">—</div>
  <div class="t" id="stat"></div>
- <div class="bar">
-  <i id="fill" style="left:0;top:0;bottom:0;width:0;border-radius:6px;background:var(--c2)"></i>
-  <i id="mWarn" style="left:65.5%;top:-4px;width:2px;height:20px;background:#fb8c00"></i>
-  <i id="mCrit" style="left:72.4%;top:-4px;width:2px;height:20px;background:#e53935"></i>
+ <div style="display:flex;gap:12px;margin:26px 0 22px;align-items:flex-start">
+  <div style="position:relative;flex:none;width:58px;height:300px;border-radius:12px;background:var(--bd)">
+   <div id="vFill" style="position:absolute;left:0;right:0;bottom:0;height:0;border-radius:0 0 12px 12px;background:var(--c2)"></div>
+   <div id="vWarn" style="position:absolute;left:-8px;right:-8px;height:3px;background:#fb8c00;bottom:65%"></div>
+   <div id="vCrit" style="position:absolute;left:-8px;right:-8px;height:3px;background:#e53935;bottom:72%"></div>
+   <div id="vNow" style="position:absolute;left:0;right:0;text-align:center;font-weight:700;font-size:15px;bottom:44%;padding-bottom:3px">0.39</div>
+  </div>
+  <div style="position:relative;flex:none;width:104px;height:300px;font-size:13px;line-height:1.1">
+   <div id="gBank" style="position:absolute;left:0;bottom:100%;transform:translateY(50%);display:flex;align-items:center;gap:6px;color:var(--mut)"><i style="width:12px;height:2px;background:var(--mut)"></i><span id="lBank">ตลิ่ง 1.20</span></div>
+   <div id="gCrit" style="position:absolute;left:0;bottom:72%;transform:translateY(50%);display:flex;align-items:center;gap:6px;color:#e53935;font-weight:600"><i style="width:12px;height:2px;background:#e53935"></i><span id="lCrit">วิกฤต 0.80</span></div>
+   <div id="gWarn" style="position:absolute;left:0;bottom:65%;transform:translateY(50%);display:flex;align-items:center;gap:6px;color:#fb8c00;font-weight:600"><i style="width:12px;height:2px;background:#fb8c00"></i><span id="lWarn">เฝ้าระวัง 0.70</span></div>
+   <div id="gBed" style="position:absolute;left:0;bottom:0;transform:translateY(50%);display:flex;align-items:center;gap:6px;color:var(--mut)"><i style="width:12px;height:2px;background:var(--mut)"></i><span id="lBed">ก้นคลอง −0.25</span></div>
+  </div>
+  <div style="flex:1;min-width:0;height:300px;display:flex;flex-direction:column;justify-content:space-around">
+   <div><div class="k">ตอนนี้</div><b id="now" style="font-size:20px">—</b></div>
+   <div><div class="k">ตลิ่ง</div><b id="bankV" style="font-size:20px">1.20 ม.</b></div>
+   <div><div class="k">สูงสุดวันนี้</div><b id="mt" style="font-size:20px">—</b></div>
+   <div><div class="k">สูงสุดเมื่อวาน</div><b id="my" style="font-size:20px">—</b></div>
+  </div>
  </div>
- <div class="sc"><span id="lBed">ก้นคลอง −0.25</span><span id="lWarn" style="color:#fb8c00">เฝ้าระวัง 0.70</span><span id="lCrit" style="color:#e53935">วิกฤต 0.80</span><span id="lBank">ตลิ่ง 1.20</span></div>
- <div class="g" style="margin-top:12px">
-  <div><div class="k">ตอนนี้</div><b id="now">—</b></div>
-  <div><div class="k">ตลิ่ง</div><b id="bankV">1.20 ม.</b></div>
-  <div><div class="k">สูงสุดวันนี้</div><b id="mt">—</b></div>
-  <div><div class="k">สูงสุดเมื่อวาน</div><b id="my">—</b></div>
- </div>
- <div class="sw" style="margin-top:10px"><svg viewBox="0 0 360 120" id="bk" role="img" aria-label="ระดับน้ำคลองย้อนหลัง"></svg></div>
+  <div class="sw" style="margin-top:10px"><svg viewBox="0 0 360 120" id="bk" role="img" aria-label="ระดับน้ำคลองย้อนหลัง"></svg></div>
  <div class="n" id="note">ระดับ ม.รทก. เส้นประส้ม/แดงคือระดับเฝ้าระวัง/วิกฤต</div>
  <div class="n" style="margin-top:6px">ข้อมูล: สำนักการระบายน้ำ กรุงเทพมหานคร ผ่าน <a href="https://flood.pop.in.th" target="_blank" rel="noopener">POPNIX Flood (flood.pop.in.th)</a> · ไม่ใช่ประกาศเตือนภัยทางการ</div>
 </div>
@@ -74,21 +82,23 @@ a{color:var(--c13)}
 <div class="g">
  <div class="card"><div class="k">C.13 ท้ายเขื่อนเจ้าพระยา (ชัยนาท)</div>
   <div class="v" style="color:var(--c13)"><span id="q13">2,500</span> <span class="u">ลบ.ม./วิ</span></div>
-  <div class="t" id="t13">เหนือเขื่อน +17.71 ม.รทก.</div></div>
+  <div class="t" id="t13">เหนือเขื่อน +17.71 ม.รทก.</div>
+  <div class="n" id="cap13" style="margin-top:4px"></div></div>
  <div class="card"><div class="k">C.2 นครสวรรค์</div>
   <div class="v" style="color:var(--c2)"><span id="q2">2,132</span> <span class="u">ลบ.ม./วิ</span></div>
-  <div class="t" id="t2">แนวโน้มลดลง ↓</div></div>
+  <div class="t" id="t2">แนวโน้มลดลง ↓</div>
+  <div class="n" id="cap2" style="margin-top:4px"></div></div>
 </div>
 <div class="n" id="damNote" style="margin:-4px 0 12px">ข้อมูลเขื่อน: 4 ต.ค. 2569 06:00 น. (กรมชลประทาน) บันทึกด้วยมือ กำลังตรวจหาข้อมูลล่าสุด…</div>
 
 <div class="card">
- <h2>ประวัติน้ำเขื่อน (ลบ.ม./วินาที) <span class="u">บันทึกด้วยมือ</span></h2>
+ <h2>ประวัติน้ำเขื่อน (ลบ.ม./วินาที) <span class="u" id="hs1">บันทึกด้วยมือ</span></h2>
  <div class="sw"><svg viewBox="0 0 360 190" id="ch" role="img" aria-label="กราฟ C.2 และ C.13"></svg></div>
  <div class="n"><span style="color:var(--c13)">● C.13</span> &nbsp; <span style="color:var(--c2)">● C.2</span></div>
 </div>
 
 <div class="card">
- <h2>ตารางประวัติเขื่อน <span class="u">บันทึกด้วยมือ</span></h2>
+ <h2>ตารางประวัติเขื่อน <span class="u" id="hs2">บันทึกด้วยมือ</span></h2>
  <table id="tb"><tr><th>วันที่</th><th>C.2</th><th>C.13</th></tr></table>
 </div>
 
@@ -111,6 +121,7 @@ a{color:var(--c13)}
 
 <script>
 var BANK=1.20,WARN=.70,CRIT=.80,BED=-.25;
+var CUR={},QMAX={c13:2840,c2:3590};
 function num(v,d){return typeof v==="number"&&isFinite(v)?v:d}
 function $(i){return document.getElementById(i)}
 function lab(s){var m=s.match(/(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})/);return (+m[3])+"/"+(+m[2])+" "+m[4]+":"+m[5]}
@@ -126,7 +137,8 @@ function fail(err){
 
 function chart(series){
  var s=$("bk"),W=360,H=120,pl=36,pr=8,pt=8,pb=22;
- var pts=series.filter(function(_,i){return i%12===0||i===series.length-1});
+ var stp=Math.max(1,Math.ceil(series.length/70));
+ var pts=series.filter(function(_,i){return i%stp===0||i===series.length-1});
  if(pts.length<2){s.innerHTML="";return}
  var vs=pts.map(function(p){return p[1]});
  var lo=Math.min(.3,Math.min.apply(null,vs)-.05),hi=Math.max(.85,Math.max.apply(null,vs)+.05);
@@ -143,8 +155,9 @@ function chart(series){
 
 function render(d){
  BANK=num(d.bank,BANK);WARN=num(d.warn,WARN);CRIT=num(d.crit,CRIT);BED=num(d.bed,BED);
- var span=BANK-BED;
- $("mWarn").style.left=((WARN-BED)/span*100)+"%";$("mCrit").style.left=((CRIT-BED)/span*100)+"%";
+ function pct(v){return Math.max(0,Math.min(100,(v-BED)/(BANK-BED)*100))}
+ $("vWarn").style.bottom=pct(WARN)+"%";$("vCrit").style.bottom=pct(CRIT)+"%";
+ $("gWarn").style.bottom=pct(WARN)+"%";$("gCrit").style.bottom=pct(CRIT)+"%";
  $("lBed").textContent="ก้นคลอง "+BED.toFixed(2);$("lWarn").textContent="เฝ้าระวัง "+WARN.toFixed(2);$("lCrit").textContent="วิกฤต "+CRIT.toFixed(2);$("lBank").textContent="ตลิ่ง "+BANK.toFixed(2);$("bankV").textContent=BANK.toFixed(2)+" ม.";
  var L=d.level,toBank=Math.round((BANK-L)*100),toWarn=Math.round((WARN-L)*100);
  var ageMin=(Date.now()-new Date(d.latestT+":00+07:00").getTime())/60000;
@@ -154,9 +167,9 @@ function render(d){
  else if(L>=WARN){summary("#b26a00","ควรติดตามดู","น้ำในคลองท้ายซอยเริ่มสูง แต่ยังไม่ล้นตลิ่ง",cStale);$("stat").textContent="● เฝ้าระวัง · เหลืออีก "+toBank+" ซม. ถึงตลิ่ง"}
  else{summary("#2e7d32","ตอนนี้ปกติ","น้ำในคลองท้ายซอยยังต่ำ ยังห่างตลิ่งมาก",cStale);$("stat").innerHTML='<span style="color:#43a047">●</span> ปกติ · อีก '+toWarn+' ซม. ถึงระดับเฝ้าระวัง'}
  $("head").innerHTML="เหลือ "+Math.max(toBank,0)+' <span class="u">ซม. ถึงตลิ่ง</span>';
- $("fill").style.width=Math.max(0,Math.min(100,(L-BED)/(BANK-BED)*100))+"%";
+ $("vFill").style.height=pct(L)+"%";$("vFill").style.background=L>=CRIT?"#e53935":L>=WARN?"#fb8c00":"var(--c2)";$("vNow").style.bottom=pct(L)+"%";$("vNow").textContent=L.toFixed(2);
  $("now").textContent=f2(L);$("mt").textContent=f2(d.maxToday);$("my").textContent=f2(d.maxYesterday);
- $("note").textContent="ระดับ ม.รทก. ย้อนหลัง 3 วัน · เส้นประส้ม/แดงคือระดับเฝ้าระวัง/วิกฤต · "+cStale+" · ไม่ใช่ประกาศทางการ";
+ $("note").textContent="ระดับ ม.รทก. ย้อนหลัง 7 วัน · เส้นประส้ม/แดงคือระดับเฝ้าระวัง/วิกฤต · "+cStale+" · ไม่ใช่ประกาศทางการ";
  chart(d.series);
 }
 
@@ -171,17 +184,20 @@ function loadDam(){
  fetch("/api/dam").then(function(r){return r.ok?r.json():Promise.reject()}).then(function(d){
   var ts=[],old=false;
   [["c13","q13","t13"],["c2","q2","t2"]].forEach(function(a){
-   var x=d[a[0]];if(!x||x.q==null)return;
+   var x=d[a[0]];if(!x||x.q==null)return;CUR[a[0]]=x.q;
    $(a[1]).textContent=nf(x.q);
    $(a[2]).textContent=arrow(x.trend)+(x.wl!=null?" · ระดับ "+x.wl.toFixed(2)+" ม.รทก.":"");
    if(x.timeUtc){ts.push(bkk(x.timeUtc));if(Date.now()-new Date(x.timeUtc).getTime()>6*3600000)old=true}
   });
+  updCap();
   $("damNote").textContent=ts.length?(old?"⚠ ข้อมูลเขื่อนเก่า ล่าสุด ":"ข้อมูลเขื่อนล่าสุด ")+ts[0]+" น. (กรมชลประทาน อัปเดตอัตโนมัติ)":"ดึงข้อมูลเขื่อนอัตโนมัติไม่ได้ ใช้ค่าที่บันทึกด้วยมือ (4 ต.ค. 06:00 น.)";
  }).catch(function(){$("damNote").textContent="ดึงข้อมูลเขื่อนอัตโนมัติไม่ได้ ใช้ค่าที่บันทึกด้วยมือ (4 ต.ค. 06:00 น.)"});
 }
 loadDam();setInterval(loadDam,900000);
 
-/* ===== ประวัติเขื่อน (บันทึกด้วยมือ) ===== */
+/* ===== ประวัติเขื่อน ===== */
+var TH=["","ม.ค.","ก.พ.","มี.ค.","เม.ย.","พ.ค.","มิ.ย.","ก.ค.","ส.ค.","ก.ย.","ต.ค.","พ.ย.","ธ.ค."];
+function dlab(iso){var m=iso.match(/(\d{4})-(\d{2})-(\d{2})/);return (+m[3])+" "+TH[+m[2]]}
 var D=[
  {d:"23 ก.ย.",c2:1737,c13:1620},
  {d:"29 ก.ย.",c2:2141,c13:2000},
@@ -189,19 +205,53 @@ var D=[
  {d:"2 ต.ค.",c2:2416,c13:2500},
  {d:"4 ต.ค.",c2:2132,c13:2500}
 ];
-var tb=$("tb");
-D.slice().reverse().forEach(function(r){var tr=tb.insertRow();tr.insertCell().textContent=r.d;tr.insertCell().textContent=r.c2.toLocaleString();tr.insertCell().textContent=r.c13.toLocaleString();});
-var s=$("ch"),W=360,H=190,pl=38,pr=10,pt=10,pb=28,mn=1400,mx=2800;
-function X(i){return pl+i*(W-pl-pr)/(D.length-1)}
-function Y(v){return pt+(mx-v)*(H-pt-pb)/(mx-mn)}
-var h="";
-[1500,2000,2500].forEach(function(g){h+='<line x1="'+pl+'" x2="'+(W-pr)+'" y1="'+Y(g)+'" y2="'+Y(g)+'" stroke="var(--bd)"/><text x="'+(pl-4)+'" y="'+(Y(g)+4)+'" font-size="10" text-anchor="end" fill="var(--mut)">'+g+'</text>'});
-function path(k,c){var p=D.map(function(r,i){return (i?"L":"M")+X(i)+" "+Y(r[k])}).join("");
- var dots=D.map(function(r,i){return '<circle cx="'+X(i)+'" cy="'+Y(r[k])+'" r="3.5" fill="'+c+'"/>'}).join("");
- return '<path d="'+p+'" fill="none" stroke="'+c+'" stroke-width="2.5"/>'+dots}
-h+=path("c2","var(--c2)")+path("c13","var(--c13)");
-D.forEach(function(r,i){h+='<text x="'+X(i)+'" y="'+(H-8)+'" font-size="10" text-anchor="middle" fill="var(--mut)">'+r.d+'</text>'});
-s.innerHTML=h;
+function updCap(){
+ [["c13","cap13"],["c2","cap2"]].forEach(function(a){
+  var q=CUR[a[0]],m=QMAX[a[0]],el=$(a[1]);
+  if(q!=null&&m)el.textContent="ใช้ความจุลำน้ำประมาณ "+Math.round(q/m*100)+"% (รับได้ "+nf(m)+")";
+ });
+}
+function drawDam(){
+ var tb=$("tb");
+ while(tb.rows.length>1)tb.deleteRow(1);
+ D.slice(-10).reverse().forEach(function(r){var tr=tb.insertRow();tr.insertCell().textContent=r.d;tr.insertCell().textContent=r.c2==null?"—":r.c2.toLocaleString();tr.insertCell().textContent=r.c13==null?"—":r.c13.toLocaleString();});
+ var vals=[];D.forEach(function(r){if(r.c2!=null)vals.push(r.c2);if(r.c13!=null)vals.push(r.c13)});
+ if(!vals.length){$("ch").innerHTML="";return}
+ var mn=Math.floor(Math.min.apply(null,vals)*0.9/100)*100,mx=Math.ceil(Math.max.apply(null,vals)*1.08/100)*100;
+ if(mx-mn<500)mx=mn+500;
+ var s=$("ch"),W=360,H=190,pl=40,pr=10,pt=10,pb=28;
+ function X(i){return D.length>1?pl+i*(W-pl-pr)/(D.length-1):pl}
+ function Y(v){return pt+(mx-v)*(H-pt-pb)/(mx-mn)}
+ var h="";
+ [1,2,3].forEach(function(k){var g=Math.round((mn+k*(mx-mn)/4)/100)*100;h+='<line x1="'+pl+'" x2="'+(W-pr)+'" y1="'+Y(g)+'" y2="'+Y(g)+'" stroke="var(--bd)"/><text x="'+(pl-4)+'" y="'+(Y(g)+4)+'" font-size="10" text-anchor="end" fill="var(--mut)">'+g+'</text>'});
+ function path(k,c){
+  var p="",gap=true,dots="";
+  D.forEach(function(r,i){var v=r[k];if(v==null){gap=true;return}p+=(gap?"M":"L")+X(i)+" "+Y(v);gap=false;dots+='<circle cx="'+X(i)+'" cy="'+Y(v)+'" r="3.5" fill="'+c+'"/>'});
+  return '<path d="'+p+'" fill="none" stroke="'+c+'" stroke-width="2.5"/>'+dots}
+ h+=path("c2","var(--c2)")+path("c13","var(--c13)");
+ var step=Math.ceil(D.length/6);
+ D.forEach(function(r,i){if(i%step===0||i===D.length-1)h+='<text x="'+X(i)+'" y="'+(H-8)+'" font-size="10" text-anchor="middle" fill="var(--mut)">'+r.d+'</text>'});
+ s.innerHTML=h;
+}
+drawDam();
+function loadHist(){
+ fetch("/api/hii").then(function(r){return r.ok?r.json():Promise.reject()}).then(function(d){
+  var rows=(d.days||[]).filter(function(r){return r.c2!=null||r.c13!=null});
+  if(rows.length<2)return;
+  D=rows.map(function(r){return {d:dlab(r.date),c2:r.c2,c13:r.c13}});
+  drawDam();
+  var st=d.stations||{};
+  if(st.c13&&st.c13.qmax)QMAX.c13=st.c13.qmax;
+  if(st.c2&&st.c2.qmax)QMAX.c2=st.c2.qmax;
+  var last=rows[rows.length-1];
+  if(CUR.c13==null&&last.c13!=null)CUR.c13=last.c13;
+  if(CUR.c2==null&&last.c2!=null)CUR.c2=last.c2;
+  updCap();
+  $("hs1").textContent="รายวัน 06:00 น. จาก สสน./กรมชลประทาน";
+  $("hs2").textContent="รายวัน 06:00 น. อัปเดตอัตโนมัติ";
+ }).catch(function(){});
+}
+loadHist();setInterval(loadHist,3600000);
 </script>
 </body>
 </html>

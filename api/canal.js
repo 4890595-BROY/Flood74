@@ -39,7 +39,7 @@ async function fromPop() {
   const latestT = toIso(st.measured_at);
   let series = [[latestT, Number(st.wl)]];
   try {
-    const hr = await get(POP + "/api_history.php?id=" + encodeURIComponent(st.id) + "&h=72", { headers: H });
+    const hr = await get(POP + "/api_history.php?id=" + encodeURIComponent(st.id) + "&h=168", { headers: H });
     if (hr.ok) {
       const h = await hr.json();
       const pts = (h.points || []).filter((p) => p.wl != null).map((p) => [toIso(p.t), Number(p.wl)]);
