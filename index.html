@@ -82,7 +82,6 @@ p { margin:6px 0 }
 .bg-orange { background: var(--alert-orange); }
 .bg-red { background: var(--alert-red); }
 
-/* ตารางสถิติ 4 ช่อง */
 .stats-grid {
   display: grid; grid-template-columns: 1fr 1fr; gap: 1px;
   background: var(--line); border: 1px solid var(--line); border-radius: 16px; overflow: hidden;
@@ -151,7 +150,8 @@ footer { font-size:12px; color:var(--muted); text-align:center; line-height: 1.8
   <div class="overview">
     <section class="card">
       <div class="row">
-        <h2 style="margin:0">ระดับน้ำปัจจุบัน</h2>
+        <!-- เพิ่มเลขเปอร์เซ็นต์หลังหัวข้อระดับน้ำปัจจุบัน -->
+        <h2 style="margin:0">ระดับน้ำปัจจุบัน (34%)</h2>
         <span class="badge" id="status-badge">ปกติ</span>
       </div>
 
@@ -163,7 +163,7 @@ footer { font-size:12px; color:var(--muted); text-align:center; line-height: 1.8
         </div>
       </div>
 
-      <p class="muted" style="text-align:center" id="water-desc">ห่างจากเส้นเฝ้าระวังอีก 29 ซม.</p>
+      <p class="muted" style="text-align:center" id="water-desc">ระดับน้ำเทียบระดับน้ำทะเลปานกลาง · ล่าสุด 20:55 น.</p>
 
       <div class="distances">
         <div class="distance bg-yellow">
@@ -179,7 +179,7 @@ footer { font-size:12px; color:var(--muted); text-align:center; line-height: 1.8
           <span class="sub-bottom" style="color:#000">ระดับตลิ่ง</span>
         </div>
       </div>
-      <small id="last-update">อ้างอิงจากข้อมูลล่าสุด (ตรวจสอบความถูกต้องจากลิงก์ด้านล่าง)</small>
+      <small id="last-update">อ้างอิงสถานี WL.BJK.02 สำนักการระบายน้ำ กทม.</small>
     </section>
 
     <section class="card">
@@ -235,7 +235,7 @@ footer { font-size:12px; color:var(--muted); text-align:center; line-height: 1.8
 
   <footer>
     ระบบแสดงผลเพื่อติดตามสถานการณ์น้ำ เพชรเกษม 74<br>
-    VERSION 1.1
+    VERSION 1.3
   </footer>
 </main>
 
