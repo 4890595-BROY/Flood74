@@ -29,16 +29,42 @@ function parse(html) {
 }
 
 async function handler(req, res) {
+  const ctrl = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(), 9000);
   try {
     const r = await fetch(URL_STATION, {
-      headers: { "User-Agent": "Mozilla/5.0", "Accept-Language": "th" },
+      signal: ctrl.signal,
+      headers: {
+        "User-Agent":
+          "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36",
+        Accept: "text/html,application/xhtml+xml",
+        "Accept-Language": "th-TH,th;q=0.9,en;q=0.5",
+        Referer: "https://weather.bangkok.go.th/water/",
+      },
     });
-    if (!r.ok) throw new Error("upstream " + r.status);
-    const data = parse(await r.text());
+    const html = await r.text();
+    if (!r.ok) {
+      res.status(502).json({ error: "เว็บ กทม. ตอบกลับ " + r.status, status: r.status });
+      return;
+    }
+    let data;
+    try {
+      data = parse(html);
+    } catch (e) {
+      const text = html.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ");
+      res.status(502).json({
+        error: "อ่านตารางข้อมูลไม่ได้",
+        length: html.length,
+        sample: text.slice(0, 300),
+      });
+      return;
+    }
     res.setHeader("Cache-Control", "s-maxage=120, stale-while-revalidate=300");
     res.status(200).json(data);
   } catch (e) {
-    res.status(502).json({ error: String(e.message || e) });
+    res.status(502).json({ error: e.name === "AbortError" ? "หมดเวลารอเว็บ กทม." : "เชื่อมต่อเว็บ กทม. ไม่ได้: " + (e.cause && e.cause.code || e.message) });
+  } finally {
+    clearTimeout(timer);
   }
 }
 

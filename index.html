@@ -115,8 +115,9 @@ function f2(v){return v==null?"—":v.toFixed(2)+" ม."}
 
 function summary(bg,a,b,c){$("sum").style.background=bg;$("sA").textContent=a;$("sB").textContent=b;$("sC").textContent=c||""}
 
-function fail(){
- summary("#6b7785","ยังดึงข้อมูลไม่ได้","ลองเปิดหน้านี้ใหม่อีกครั้ง","หรือดูจุดวัดสดที่ลิงก์ท้ายหน้า");
+function fail(err){
+ var why=err&&err.error?"สาเหตุ: "+err.error:"หรือดูจุดวัดสดที่ลิงก์ท้ายหน้า";
+ summary("#6b7785","ยังดึงข้อมูลไม่ได้","ลองเปิดหน้านี้ใหม่อีกครั้ง",why);
  $("head").textContent="—";
 }
 
@@ -152,7 +153,7 @@ function render(d){
  chart(d.series);
 }
 
-fetch("/api/canal").then(function(r){return r.ok?r.json():Promise.reject()}).then(render).catch(fail);
+fetch("/api/canal").then(function(r){return r.json().then(function(j){return r.ok?j:Promise.reject(j)})}).then(render).catch(fail);
 setInterval(function(){fetch("/api/canal").then(function(r){return r.ok?r.json():Promise.reject()}).then(render).catch(function(){})},300000);
 
 
