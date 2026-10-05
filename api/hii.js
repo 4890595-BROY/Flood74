@@ -114,3 +114,4 @@ async function handler(req, res) {
 module.exports = handler;
 module.exports.extractJson = extractJson;
 module.exports.pickItc = pickItc;
+module.exports.fetchDay = fetchDay;

@@ -1,4 +1,7 @@
 {
   "regions": ["sin1"],
-  "functions": { "api/hii.js": { "maxDuration": 30 } }
+  "functions": {
+    "api/hii.js": { "maxDuration": 30 },
+    "api/year.js": { "maxDuration": 60 }
+  }
 }
