@@ -330,7 +330,7 @@ function updNorth(){
    +'<span style="flex:1">'+l.t+'</span><span class="n" style="white-space:nowrap">'+l.r+'</span></div>';
  });
  $("nList").innerHTML=s;
- if(YEAR)drawYear();
+ if(YEAR&&YEAR_DONE)drawYear();
 }
 
 /* ===== เทียบน้ำปีนี้กับปีน้ำท่วมใหญ่ (วางทับภาพสถิติ C.2) ===== */
@@ -340,10 +340,11 @@ function cx(d){return CAL.x0+(d-0.5)/365*CAL.xw}
 function cy(v){return CAL.y0-CAL.k*v}
 function doyOf(iso){var m=iso.match(/(\d{4})-(\d{2})-(\d{2})/);return Math.round((Date.UTC(+m[1],+m[2]-1,+m[3])-Date.UTC(+m[1],0,0))/86400000)}
 function todayIso(){return new Date(Date.now()+7*3600000).toISOString().slice(0,10)}
+var YEAR_DONE=false;
 function drawYear(){
- if(!YEAR)return;
+ if(!YEAR||!YEAR.length)return;
  var pts=YEAR.slice(),live=CUR.c2,td=todayIso();
- if(live!=null){pts=pts.filter(function(p){return p.date!==td});pts.push({date:td,q:live})}
+ if(YEAR_DONE&&live!=null){pts=pts.filter(function(p){return p.date!==td});pts.push({date:td,q:live})}
  pts.sort(function(a,b){return a.date<b.date?-1:1});
  var xy=pts.map(function(p){return [cx(doyOf(p.date)),cy(p.q)]});
  var last=pts[pts.length-1],L=xy[xy.length-1];
@@ -352,26 +353,53 @@ function drawYear(){
   +'<polyline points="'+line+'" fill="none" stroke="#111" stroke-width="5" stroke-linejoin="round" stroke-linecap="round"/>'
   +'<circle cx="'+L[0].toFixed(1)+'" cy="'+L[1].toFixed(1)+'" r="9" fill="#111" stroke="#fff" stroke-width="3"/>'
   +'<text x="'+(L[0]-16).toFixed(1)+'" y="'+(L[1]-14).toFixed(1)+'" text-anchor="end" font-size="28" font-weight="700" fill="#111" stroke="#fff" stroke-width="6" paint-order="stroke">ปีนี้ '+nf(last.q)+'</text>';
+ if(!YEAR_DONE)return;
  $("cmpHead").style.color="var(--tx)";
+ var part=YEAR_GAPS?" · ข้อมูลบางช่วงยังขาด":"";
  if(live!=null){
   $("cmpHead").textContent="ตอนนี้ "+nf(live)+" ลบ.ม./วินาที";
-  $("cmpSub").textContent="ค่าล่าสุด"+(NT.c2?" "+NT.c2+" น.":"")+" ตรงกับการ์ด C.2 · ช่วงก่อนหน้าเป็นค่ารายวัน 06:00 น. จาก สสน. · เส้นดำคือปีนี้";
+  $("cmpSub").textContent="ค่าล่าสุด"+(NT.c2?" "+NT.c2+" น.":"")+" ตรงกับการ์ด C.2 · เดือนก่อนๆ เดือนละ 2 จุด เดือนนี้รายวัน (06:00 น.) จาก สสน. · เส้นดำคือปีนี้"+part;
  }else{
   $("cmpHead").textContent="ล่าสุด "+nf(last.q)+" ลบ.ม./วินาที";
-  $("cmpSub").textContent="ค่ารายวัน 06:00 น. ของ "+dlab(last.date)+" · เส้นดำคือปีนี้";
+  $("cmpSub").textContent="ค่ารายวัน 06:00 น. ของ "+dlab(last.date)+" · เส้นดำคือปีนี้"+part;
  }
 }
-function loadYear(){
- fetch("/api/year").then(function(r){return r.ok?r.json():Promise.reject()}).then(function(d){
-  var pts=(d.points||[]).filter(function(p){return p.q!=null&&p.date});
-  if(pts.length<2)throw 0;
-  YEAR=pts;drawYear();
- }).catch(function(){
-  $("cmpHead").textContent="ยังดึงข้อมูลปีนี้ไม่ได้";
-  $("cmpSub").textContent="กราฟสถิติด้านล่างยังดูได้ แต่เส้นของปีนี้ยังไม่ขึ้น";
+var YEAR_GAPS=false;
+function getMonth(mm,retry){
+ return fetch("/api/year?m="+mm).then(function(r){
+  return r.json().then(function(j){return r.ok?j.points:Promise.reject(j)},function(){return Promise.reject({error:"เซิร์ฟเวอร์ตอบกลับ "+r.status})});
+ }).catch(function(e){
+  if(retry<1)return new Promise(function(res){setTimeout(res,1500)}).then(function(){return getMonth(mm,retry+1)});
+  throw e;
  });
 }
-loadYear();setInterval(loadYear,3600000);
+function loadYear(){
+ var cm=new Date(Date.now()+7*3600000).getUTCMonth()+1,m=1,map={},lastErr="";
+ YEAR_DONE=false;YEAR_GAPS=false;
+ $("cmpHead").style.color="var(--mut)";
+ $("cmpHead").textContent="กำลังโหลดข้อมูลปีนี้…";
+ function finish(){
+  var arr=Object.keys(map).sort().map(function(k){return map[k]});
+  if(arr.length<2){
+   $("cmpHead").textContent="ยังดึงข้อมูลปีนี้ไม่ได้";
+   $("cmpSub").textContent="สาเหตุ: "+(lastErr||"ไม่ทราบ")+" · กราฟสถิติด้านล่างยังดูได้";
+   return;
+  }
+  YEAR=arr;YEAR_DONE=true;drawYear();
+ }
+ function next(){
+  if(m>cm){finish();return}
+  var mm=m++;
+  $("cmpSub").textContent="กำลังโหลดเดือนที่ "+mm+" จาก "+cm+"…";
+  getMonth(mm,0).then(function(pts){
+   pts.forEach(function(p){if(p.q!=null&&p.date)map[p.date]=p});
+   var arr=Object.keys(map).sort().map(function(k){return map[k]});
+   if(arr.length>=2){YEAR=arr;drawYear()}
+  }).catch(function(e){YEAR_GAPS=true;lastErr=(e&&e.error)||"เชื่อมต่อไม่ได้"}).then(next);
+ }
+ next();
+}
+loadYear();
 
 /* ===== ปุ่มอัปเดตข้อมูล ===== */
 var rfBusy=false;

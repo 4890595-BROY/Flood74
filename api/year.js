@@ -1,27 +1,34 @@
-// Vercel serverless function: ปริมาณน้ำรายวันของสถานี C.2 ตั้งแต่ 1 ม.ค. ของปีนี้ถึงวันนี้
-// เอาไว้ plot ทับกราฟสถิติปีน้ำท่วมใหญ่ (ดึงจาก สสน. ด้วยวิธีเดียวกับ api/hii.js)
-// เพื่อไม่ให้ภาระเซิร์ฟเวอร์ต้นทางมากเกินไป: ดึงทุก 3 วัน + 6 วันล่าสุดทุกวัน และเก็บผลไว้ 12 ชั่วโมง
+// Vercel serverless function: ปริมาณน้ำรายวัน (06:00 น.) ของสถานี C.2 "ทีละเดือน" ของปีนี้
+// เรียกเป็น /api/year?m=1 ... /api/year?m=12 (หน้าเว็บเรียกทีละเดือนต่อเนื่องกัน)
+// ดึงจาก สสน. ด้วยวิธีเดียวกับ api/hii.js และเก็บผลไว้ใน cache: เดือนที่จบแล้วเก็บ 7 วัน เดือนปัจจุบันเก็บ 1 ชั่วโมง
+// เดือนที่ผ่านมาแล้วดึงเดือนละ 2 ครั้ง (วันที่ 1 และ 15) เดือนปัจจุบันดึงรายวัน ครั้งละไม่เกิน 4 คำขอพร้อมกัน
 const { fetchDay } = require("./hii.js");
-const STEP = 3;
-const CHUNK = 25;
 const DAY = 86400000;
+const CONC = 4;
 
 async function handler(req, res) {
   try {
     const bkk = new Date(Date.now() + 7 * 3600000);
     const year = bkk.getUTCFullYear();
-    const start = Date.UTC(year, 0, 1);
-    const today = Date.UTC(year, bkk.getUTCMonth(), bkk.getUTCDate());
-    const want = new Set();
-    for (let t = start; t <= today; t += STEP * DAY) want.add(new Date(t).toISOString().slice(0, 10));
-    for (let k = 0; k < 6; k++) want.add(new Date(today - k * DAY).toISOString().slice(0, 10));
-    const days = [...want].sort();
+    const curMonth = bkk.getUTCMonth() + 1;
+    const m = parseInt(req.query && req.query.m, 10);
+    if (!(m >= 1 && m <= 12) || m > curMonth) {
+      res.status(400).json({ error: "เดือนไม่ถูกต้อง" });
+      return;
+    }
+    // เดือนที่ผ่านมาแล้ว: ดึงเดือนละ 2 ครั้ง (วันที่ 1 และ 15) · เดือนปัจจุบัน: ดึงรายวันตั้งแต่วันที่ 1 ถึงวันนี้
+    const days = [];
+    if (m < curMonth) {
+      for (const d of [1, 15]) days.push(new Date(Date.UTC(year, m - 1, d)).toISOString().slice(0, 10));
+    } else {
+      for (let d = 1; d <= bkk.getUTCDate(); d++) days.push(new Date(Date.UTC(year, m - 1, d)).toISOString().slice(0, 10));
+    }
 
     const byDate = new Map();
     let qmax = null;
     let firstErr = null;
-    for (let i = 0; i < days.length; i += CHUNK) {
-      const results = await Promise.allSettled(days.slice(i, i + CHUNK).map(fetchDay));
+    for (let i = 0; i < days.length; i += CONC) {
+      const results = await Promise.allSettled(days.slice(i, i + CONC).map(fetchDay));
       for (const r of results) {
         if (r.status !== "fulfilled") {
           firstErr = firstErr || (r.reason && r.reason.message) || String(r.reason);
@@ -36,9 +43,12 @@ async function handler(req, res) {
       }
     }
     const points = [...byDate.values()].sort((a, b) => (a.date < b.date ? -1 : 1));
-    if (!points.length) throw new Error(firstErr || "ไม่พบข้อมูล C.2 ของปีนี้");
-    res.setHeader("Cache-Control", "s-maxage=43200, stale-while-revalidate=86400");
-    res.status(200).json({ year, points, qmax, requested: days.length });
+    if (!points.length) throw new Error(firstErr || "ไม่พบข้อมูล C.2 ของเดือนนี้");
+    res.setHeader(
+      "Cache-Control",
+      m < curMonth ? "s-maxage=604800, stale-while-revalidate=86400" : "s-maxage=3600, stale-while-revalidate=7200"
+    );
+    res.status(200).json({ year, month: m, points, qmax, requested: days.length });
   } catch (e) {
     res.status(502).json({ error: String(e.message || e) });
   }
