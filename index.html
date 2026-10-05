@@ -41,7 +41,10 @@ a{color:var(--c13)}
 </head>
 <body>
 <div class="w">
-<h1>🌊 ความเสี่ยงน้ำท่วม ซอยเพชรเกษม 74</h1>
+<div style="display:flex;justify-content:space-between;align-items:baseline;gap:8px">
+<h1 style="flex:1;min-width:0">🌊 ความเสี่ยงน้ำท่วม ซอยเพชรเกษม 74</h1>
+<span style="flex:none;font-size:12px;color:var(--mut)">V 1.0</span>
+</div>
 <div class="sub">ข้อมูลอัปเดตอัตโนมัติ · ถ้าดึงไม่ได้จะบอกไว้ในแต่ละส่วน</div>
 
 <div class="card" id="sum">
@@ -53,7 +56,7 @@ a{color:var(--c13)}
 
 <div class="card">
  <div class="k">📍 คลองบางจาก ซอยเพชรเกษม 68 · สถานี WL.BJK.02</div>
- <div class="v" style="color:var(--c2)" id="head">—</div>
+ <div class="v" style="color:var(--c2);font-size:52px;line-height:1.2;margin:2px 0" id="head">—</div>
  <div class="t" id="stat"></div>
  <div style="display:flex;gap:12px;margin:26px 0 22px;align-items:flex-start">
   <div style="position:relative;flex:none;width:58px;height:300px;border-radius:12px;background:var(--bd)">
@@ -81,6 +84,24 @@ a{color:var(--c13)}
   <div class="sw" style="margin-top:10px"><svg viewBox="0 0 360 120" id="bk" role="img" aria-label="ระดับน้ำคลองย้อนหลัง"></svg></div>
  <div class="n" id="note">ระดับ ม.รทก. เส้นประส้ม/แดงคือระดับเฝ้าระวัง/วิกฤต</div>
  <div class="n" style="margin-top:6px">ข้อมูล: สำนักการระบายน้ำ กรุงเทพมหานคร ผ่าน <a href="https://flood.pop.in.th" target="_blank" rel="noopener">POPNIX Flood (flood.pop.in.th)</a> · ไม่ใช่ประกาศเตือนภัยทางการ</div>
+</div>
+
+<div class="card" id="north">
+ <div class="k">🏔️ สรุปน้ำจากภาคเหนือ · อ้างอิง C.2 นครสวรรค์</div>
+ <div id="nHead" style="font-size:52px;font-weight:700;margin:4px 0;line-height:1.2;color:var(--mut)">กำลังโหลด…</div>
+ <div id="nVal" class="t"></div>
+ <div style="position:relative;margin:30px 0 28px">
+  <div style="display:flex;height:18px;border-radius:9px;overflow:hidden">
+   <i style="flex:1;background:#2e7d32"></i><i style="flex:1;background:#f9a825"></i><i style="flex:1;background:#ef6c00"></i><i style="flex:1;background:#d84315"></i><i style="flex:1;background:#b71c1c"></i>
+  </div>
+  <div id="nPin" style="position:absolute;top:-8px;width:4px;height:34px;margin-left:-2px;background:var(--tx);border-radius:2px;display:none"></div>
+  <div class="n" style="position:absolute;top:22px;left:20%;transform:translateX(-50%)">2,500</div>
+  <div class="n" style="position:absolute;top:22px;left:40%;transform:translateX(-50%)">3,000</div>
+  <div class="n" style="position:absolute;top:22px;left:60%;transform:translateX(-50%)">3,600</div>
+  <div class="n" style="position:absolute;top:22px;left:80%;transform:translateX(-50%)">4,000</div>
+ </div>
+ <div id="nList"></div>
+ <div class="n" style="margin-top:8px;line-height:1.6">ดูจากปริมาณน้ำ (ลบ.ม./วินาที) ที่ C.2 เท่านั้น<br>เกณฑ์ตั้งไว้เองเพื่อให้อ่านง่าย<br>อ้างอิงจากปริมาณน้ำ ปี 2554<br>ไม่ใช่ประกาศเตือนภัยทางการ</div>
 </div>
 
 <div class="g">
@@ -116,16 +137,15 @@ a{color:var(--c13)}
 </div>
 
 <div class="card n">
- <b>ที่มา</b> ระดับน้ำคลอง: สำนักการระบายน้ำ กรุงเทพมหานคร ผ่าน <a href="https://flood.pop.in.th" target="_blank" rel="noopener">POPNIX Flood</a> (
- <a href="https://weather.bangkok.go.th/water/StationDetail?id=252" target="_blank" rel="noopener">จุดวัดต้นทาง</a>)
- · ข้อมูลเขื่อน: กรมชลประทาน (
+ <b>ที่มา</b> ระดับน้ำคลอง: สำนักการระบายน้ำ กรุงเทพมหานคร<br>ผ่าน <a href="https://flood.pop.in.th" target="_blank" rel="noopener">POPNIX Flood</a> (
+ <a href="https://weather.bangkok.go.th/water/StationDetail?id=252" target="_blank" rel="noopener">จุดวัดต้นทาง</a>) ·<br>ข้อมูลเขื่อน: กรมชลประทาน (
  <a href="https://www.rid.go.th" target="_blank" rel="noopener">rid.go.th</a>)
 </div>
 </div>
 
 <script>
 var BANK=1.20,WARN=.70,CRIT=.80,BED=-.25;
-var CUR={},QMAX={c13:2840,c2:3590};
+var CUR={},NT={},QMAX={c13:2840,c2:3590};
 function num(v,d){return typeof v==="number"&&isFinite(v)?v:d}
 function $(i){return document.getElementById(i)}
 function lab(s){var m=s.match(/(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})/);return (+m[3])+"/"+(+m[2])+" "+m[4]+":"+m[5]}
@@ -170,7 +190,7 @@ function render(d){
  else if(L>=CRIT){summary("#c62828","ระวัง น้ำสูง","น้ำในคลองท้ายซอยสูงมาก ควรเตรียมพร้อม",cStale);$("stat").textContent="● วิกฤต · เหลืออีก "+toBank+" ซม. ถึงตลิ่ง"}
  else if(L>=WARN){summary("#b26a00","ควรติดตามดู","น้ำในคลองท้ายซอยเริ่มสูง แต่ยังไม่ล้นตลิ่ง",cStale);$("stat").textContent="● เฝ้าระวัง · เหลืออีก "+toBank+" ซม. ถึงตลิ่ง"}
  else{summary("#2e7d32","ตอนนี้ปกติ","น้ำในคลองท้ายซอยยังต่ำ ยังห่างตลิ่งมาก",cStale);$("stat").innerHTML='<span style="color:#43a047">●</span> ปกติ · อีก '+toWarn+' ซม. ถึงระดับเฝ้าระวัง'}
- $("head").innerHTML="เหลือ "+Math.max(toBank,0)+' <span class="u">ซม. ถึงตลิ่ง</span>';
+ $("head").innerHTML="เหลือ "+Math.max(toBank,0)+' <span class="u" style="font-size:16px">ซม. ถึงตลิ่ง</span>';
  $("vFill").style.height=pct(L)+"%";$("vFill").style.background=L>=CRIT?"#e53935":L>=WARN?"#fb8c00":"var(--c2)";$("vNow").style.bottom=pct(L)+"%";$("vNow").textContent=L.toFixed(2);
  $("now").innerHTML=L.toFixed(2)+' <span style="font-size:16px;font-weight:400">ม.</span>';$("mt").textContent=f2(d.maxToday);$("my").textContent=f2(d.maxYesterday);$("lt").textContent=f2(d.minToday);$("ly").textContent=f2(d.minYesterday);
  $("note").textContent="ระดับ ม.รทก. ย้อนหลัง 7 วัน · เส้นประส้ม/แดงคือระดับเฝ้าระวัง/วิกฤต · "+cStale+" · ไม่ใช่ประกาศทางการ";
@@ -191,11 +211,11 @@ function loadDam(){
    var x=d[a[0]];if(!x||x.q==null)return;CUR[a[0]]=x.q;
    $(a[1]).textContent=nf(x.q);
    $(a[2]).textContent=arrow(x.trend)+(x.wl!=null?" · ระดับ "+x.wl.toFixed(2)+" ม.รทก.":"");
-   if(x.timeUtc){ts.push(bkk(x.timeUtc));if(Date.now()-new Date(x.timeUtc).getTime()>6*3600000)old=true}
+   if(x.timeUtc){NT[a[0]]=bkk(x.timeUtc);ts.push(bkk(x.timeUtc));if(Date.now()-new Date(x.timeUtc).getTime()>6*3600000)old=true}
   });
-  updCap();
+  updCap();updNorth();
   $("damNote").textContent=ts.length?(old?"⚠ ข้อมูลเขื่อนเก่า ล่าสุด ":"ข้อมูลเขื่อนล่าสุด ")+ts[0]+" น. (กรมชลประทาน อัปเดตอัตโนมัติ)":"ดึงข้อมูลเขื่อนอัตโนมัติไม่ได้ ใช้ค่าที่บันทึกด้วยมือ (4 ต.ค. 06:00 น.)";
- }).catch(function(){$("damNote").textContent="ดึงข้อมูลเขื่อนอัตโนมัติไม่ได้ ใช้ค่าที่บันทึกด้วยมือ (4 ต.ค. 06:00 น.)"});
+ }).catch(function(){$("damNote").textContent="ดึงข้อมูลเขื่อนอัตโนมัติไม่ได้ ใช้ค่าที่บันทึกด้วยมือ (4 ต.ค. 06:00 น.)";if(CUR.c2==null){$("nHead").textContent="ยังดึงข้อมูลไม่ได้";$("nHead").style.color="var(--mut)"}});
 }
 loadDam();setInterval(loadDam,900000);
 
@@ -250,12 +270,39 @@ function loadHist(){
   var last=rows[rows.length-1];
   if(CUR.c13==null&&last.c13!=null)CUR.c13=last.c13;
   if(CUR.c2==null&&last.c2!=null)CUR.c2=last.c2;
-  updCap();
+  updCap();updNorth();
   $("hs1").textContent="รายวัน 06:00 น. จาก สสน./กรมชลประทาน";
   $("hs2").textContent="รายวัน 06:00 น. อัปเดตอัตโนมัติ";
  }).catch(function(){});
 }
 loadHist();setInterval(loadHist,3600000);
+
+/* ===== สรุปน้ำจากภาคเหนือ (อ้างอิง C.2) ===== */
+var NLV=[
+ {c:"#2e7d32",tc:"#2e7d32",t:"ปกติ",r:"ต่ำกว่า 2,500"},
+ {c:"#f9a825",tc:"#b26a00",t:"ควรเฝ้าระวัง",r:"2,501 – 3,000"},
+ {c:"#ef6c00",tc:"#d35400",t:"ควรเฝ้าระวังเป็นพิเศษ",r:"3,001 – 3,600"},
+ {c:"#d84315",tc:"#d84315",t:"ควรเตรียมพร้อมรับน้ำเหนือ",r:"3,601 – 4,000"},
+ {c:"#b71c1c",tc:"#c62828",t:"ควรเก็บของขึ้นที่สูง",r:"4,001 ขึ้นไป"}
+];
+var NB=[1500,2500,3000,3600,4000,4500];
+function nIdx(q){return q<=2500?0:q<=3000?1:q<=3600?2:q<=4000?3:4}
+function updNorth(){
+ var q=CUR.c2;if(q==null)return;
+ var i=nIdx(q),lv=NLV[i];
+ $("nHead").textContent=lv.t;$("nHead").style.color=lv.tc;
+ $("nVal").textContent="ตอนนี้ "+nf(q)+" ลบ.ม./วินาที"+(NT.c2?" · ข้อมูล "+NT.c2+" น.":"");
+ var f=Math.max(0,Math.min(1,(q-NB[i])/(NB[i+1]-NB[i])));
+ $("nPin").style.left=((i+f)*20)+"%";$("nPin").style.display="block";
+ var s="";
+ NLV.forEach(function(l,k){
+  var on=k===i;
+  s+='<div style="display:flex;align-items:center;gap:8px;padding:6px 8px;margin-bottom:4px;border-radius:8px;font-size:14px;'+(on?'background:'+l.c+'26;border-left:4px solid '+l.c+';font-weight:700':'opacity:.6;border-left:4px solid transparent')+'">'
+   +'<i style="width:12px;height:12px;border-radius:6px;background:'+l.c+';flex:none"></i>'
+   +'<span style="flex:1">'+l.t+'</span><span class="n" style="white-space:nowrap">'+l.r+'</span></div>';
+ });
+ $("nList").innerHTML=s;
+}
 </script>
 </body>
 </html>
