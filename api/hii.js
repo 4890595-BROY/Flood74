@@ -46,6 +46,7 @@ function pickItc(json) {
     if (v && num(v.storage) !== null) {
       out[name] = {
         date: String(v.date || "").slice(0, 10),
+        at: String(v.date || ""), // วันเวลาตามที่ สสน. ระบุ (ใช้ตรวจว่าเป็นค่าเวลาไหน)
         q: num(v.storage), // ลบ.ม./วินาที
         qmax: num(v.qmax), // ความจุลำน้ำ ลบ.ม./วินาที
         wl: num(v.water_l),
@@ -96,7 +97,8 @@ async function handler(req, res) {
         const v = r.value.data[key];
         if (!v) continue;
         const d = v.date || r.value.day;
-        const row = byDate.get(d) || { date: d, c2: null, c13: null };
+        const row = byDate.get(d) || { date: d, c2: null, c13: null, at: "" };
+        row.at = row.at || v.at || "";
         row[key] = v.q;
         byDate.set(d, row);
         if (!meta[key] || d >= meta[key].date) meta[key] = { date: d, qmax: v.qmax, wl: v.wl, bank: v.bank };

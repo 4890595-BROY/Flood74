@@ -51,7 +51,7 @@ a{color:var(--c13)}
 <div class="w">
 <div style="display:flex;justify-content:space-between;align-items:baseline;gap:8px">
 <h1 style="flex:1;min-width:0">🌊 ความเสี่ยงน้ำท่วม ซอยเพชรเกษม 74</h1>
-<span style="flex:none;font-size:12px;color:var(--mut)">V 1.1</span>
+<span style="flex:none;font-size:12px;color:var(--mut)">V 1.2</span>
 </div>
 <div class="sub">ข้อมูลอัปเดตอัตโนมัติ · ถ้าดึงไม่ได้จะบอกไว้ในแต่ละส่วน</div>
 
@@ -119,7 +119,7 @@ a{color:var(--c13)}
 <div class="card" id="cmp">
  <div class="k">📈 เทียบน้ำปีนี้ กับปีน้ำท่วมใหญ่ · C.2 นครสวรรค์</div>
  <div id="cmpHead" style="font-size:20px;font-weight:700;margin:4px 0;line-height:1.3;color:var(--mut)">กำลังโหลดข้อมูลปีนี้…</div>
- <div class="n" id="cmpSub"></div>
+ <div class="n" id="cmpSub" style="line-height:1.6"></div>
  <div class="sw" style="margin-top:10px;border-radius:10px;background:#fff">
   <div style="position:relative;min-width:760px">
    <img src="c2-history.png" alt="กราฟสถิติปริมาณน้ำรายวัน C.2 ปี 2538 2545 2549 2554" style="display:block;width:100%;height:auto">
@@ -266,7 +266,7 @@ function updCap(){
 function drawDam(){
  var tb=$("tb");
  while(tb.rows.length>1)tb.deleteRow(1);
- D.slice(-10).reverse().forEach(function(r){var tr=tb.insertRow();tr.insertCell().textContent=r.d;tr.insertCell().textContent=r.c2==null?"—":r.c2.toLocaleString();tr.insertCell().textContent=r.c13==null?"—":r.c13.toLocaleString();});
+ D.slice(-10).reverse().forEach(function(r){var tr=tb.insertRow();tr.insertCell().textContent=r.d+(r.today?" (ล่าสุด"+(r.tm?" "+r.tm+" น.":"")+")":"");tr.insertCell().textContent=r.c2==null?"—":r.c2.toLocaleString();tr.insertCell().textContent=r.c13==null?"—":r.c13.toLocaleString();});
  var vals=[];D.forEach(function(r){if(r.c2!=null)vals.push(r.c2);if(r.c13!=null)vals.push(r.c13)});
  if(!vals.length){$("ch").innerHTML="";return}
  var mn=Math.floor(Math.min.apply(null,vals)*0.9/100)*100,mx=Math.ceil(Math.max.apply(null,vals)*1.08/100)*100;
@@ -290,7 +290,7 @@ function loadHist(){
  fetch("/api/hii").then(function(r){return r.ok?r.json():Promise.reject()}).then(function(d){
   var rows=(d.days||[]).filter(function(r){return r.c2!=null||r.c13!=null});
   if(rows.length<2)return;
-  D=rows.map(function(r){return {d:dlab(r.date),c2:r.c2,c13:r.c13}});
+  D=rows.map(function(r){var tm=(String(r.at||"").match(/(\d{2}:\d{2})/)||[])[1];return {d:dlab(r.date),c2:r.c2,c13:r.c13,today:r.date===todayIso(),tm:tm||""}});
   drawDam();
   var st=d.stations||{};
   if(st.c13&&st.c13.qmax)QMAX.c13=st.c13.qmax;
@@ -299,8 +299,8 @@ function loadHist(){
   if(CUR.c13==null&&last.c13!=null)CUR.c13=last.c13;
   if(CUR.c2==null&&last.c2!=null)CUR.c2=last.c2;
   updCap();updNorth();
-  $("hs1").textContent="รายวัน 06:00 น. จาก สสน./กรมชลประทาน";
-  $("hs2").textContent="รายวัน 06:00 น. อัปเดตอัตโนมัติ";
+  $("hs1").textContent="รายวัน จาก สสน./กรมชลประทาน";
+  $("hs2").textContent="รายวัน · แถววันนี้คือค่าล่าสุด";
  }).catch(function(){});
 }
 loadHist();setInterval(loadHist,3600000);
@@ -355,13 +355,13 @@ function drawYear(){
   +'<text x="'+(L[0]-16).toFixed(1)+'" y="'+(L[1]-14).toFixed(1)+'" text-anchor="end" font-size="28" font-weight="700" fill="#111" stroke="#fff" stroke-width="6" paint-order="stroke">ปีนี้ '+nf(last.q)+'</text>';
  if(!YEAR_DONE)return;
  $("cmpHead").style.color="var(--tx)";
- var part=YEAR_GAPS?" · ข้อมูลบางช่วงยังขาด":"";
+ var part=YEAR_GAPS?"<br>ข้อมูลบางช่วงยังขาด":"";
  if(live!=null){
   $("cmpHead").textContent="ตอนนี้ "+nf(live)+" ลบ.ม./วินาที";
-  $("cmpSub").textContent="ค่าล่าสุด"+(NT.c2?" "+NT.c2+" น.":"")+" ตรงกับการ์ด C.2 · เดือนก่อนๆ เดือนละ 2 จุด เดือนนี้รายวัน (06:00 น.) จาก สสน. · เส้นดำคือปีนี้"+part;
+  $("cmpSub").innerHTML="ค่าล่าสุด"+(NT.c2?" "+NT.c2+" น.":"")+"<br>เดือนก่อนๆ ดึงข้อมูลมา เดือนละ 2 จุด<br>เดือนนี้ ดึงข้อมูลแบบรายวัน จาก สสน. ·<br>เส้นดำคือของปีนี้"+part;
  }else{
   $("cmpHead").textContent="ล่าสุด "+nf(last.q)+" ลบ.ม./วินาที";
-  $("cmpSub").textContent="ค่ารายวัน 06:00 น. ของ "+dlab(last.date)+" · เส้นดำคือปีนี้"+part;
+  $("cmpSub").innerHTML="ค่ารายวันล่าสุดของ "+dlab(last.date)+"<br>เดือนก่อนๆ ดึงข้อมูลมา เดือนละ 2 จุด<br>เดือนนี้ ดึงข้อมูลแบบรายวัน จาก สสน. ·<br>เส้นดำคือของปีนี้"+part;
  }
 }
 var YEAR_GAPS=false;
