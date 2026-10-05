@@ -263,26 +263,37 @@ function updCap(){
   if(q!=null&&m)el.textContent="ใช้ความจุลำน้ำประมาณ "+Math.round(q/m*100)+"% (รับได้ "+nf(m)+")";
  });
 }
+function viewRows(){
+ return D.map(function(r){
+  if(!r.today)return r;
+  var o={d:r.d,c2:r.c2,c13:r.c13,today:true,tm:r.tm};
+  if(CUR.c2!=null)o.c2=CUR.c2;
+  if(CUR.c13!=null)o.c13=CUR.c13;
+  var m=(NT.c2||"").match(/(\d{2}:\d{2})/);if(m)o.tm=m[1];
+  return o;
+ });
+}
 function drawDam(){
+ var Dv=viewRows();
  var tb=$("tb");
  while(tb.rows.length>1)tb.deleteRow(1);
- D.slice(-10).reverse().forEach(function(r){var tr=tb.insertRow();tr.insertCell().textContent=r.d+(r.today?" (ล่าสุด"+(r.tm?" "+r.tm+" น.":"")+")":"");tr.insertCell().textContent=r.c2==null?"—":r.c2.toLocaleString();tr.insertCell().textContent=r.c13==null?"—":r.c13.toLocaleString();});
- var vals=[];D.forEach(function(r){if(r.c2!=null)vals.push(r.c2);if(r.c13!=null)vals.push(r.c13)});
+ Dv.slice(-10).reverse().forEach(function(r){var tr=tb.insertRow();tr.insertCell().textContent=r.d+(r.today?" (ล่าสุด"+(r.tm?" "+r.tm+" น.":"")+")":"");tr.insertCell().textContent=r.c2==null?"—":r.c2.toLocaleString();tr.insertCell().textContent=r.c13==null?"—":r.c13.toLocaleString();});
+ var vals=[];Dv.forEach(function(r){if(r.c2!=null)vals.push(r.c2);if(r.c13!=null)vals.push(r.c13)});
  if(!vals.length){$("ch").innerHTML="";return}
  var mn=Math.floor(Math.min.apply(null,vals)*0.9/100)*100,mx=Math.ceil(Math.max.apply(null,vals)*1.08/100)*100;
  if(mx-mn<500)mx=mn+500;
  var s=$("ch"),W=360,H=190,pl=40,pr=10,pt=10,pb=28;
- function X(i){return D.length>1?pl+i*(W-pl-pr)/(D.length-1):pl}
+ function X(i){return Dv.length>1?pl+i*(W-pl-pr)/(Dv.length-1):pl}
  function Y(v){return pt+(mx-v)*(H-pt-pb)/(mx-mn)}
  var h="";
  [1,2,3].forEach(function(k){var g=Math.round((mn+k*(mx-mn)/4)/100)*100;h+='<line x1="'+pl+'" x2="'+(W-pr)+'" y1="'+Y(g)+'" y2="'+Y(g)+'" stroke="var(--bd)"/><text x="'+(pl-4)+'" y="'+(Y(g)+4)+'" font-size="10" text-anchor="end" fill="var(--mut)">'+g+'</text>'});
  function path(k,c){
   var p="",gap=true,dots="";
-  D.forEach(function(r,i){var v=r[k];if(v==null){gap=true;return}p+=(gap?"M":"L")+X(i)+" "+Y(v);gap=false;dots+='<circle cx="'+X(i)+'" cy="'+Y(v)+'" r="3.5" fill="'+c+'"/>'});
+  Dv.forEach(function(r,i){var v=r[k];if(v==null){gap=true;return}p+=(gap?"M":"L")+X(i)+" "+Y(v);gap=false;dots+='<circle cx="'+X(i)+'" cy="'+Y(v)+'" r="3.5" fill="'+c+'"/>'});
   return '<path d="'+p+'" fill="none" stroke="'+c+'" stroke-width="2.5"/>'+dots}
  h+=path("c2","var(--c2)")+path("c13","var(--c13)");
- var step=Math.ceil(D.length/6);
- D.forEach(function(r,i){if(i%step===0||i===D.length-1)h+='<text x="'+X(i)+'" y="'+(H-8)+'" font-size="10" text-anchor="middle" fill="var(--mut)">'+r.d+'</text>'});
+ var step=Math.ceil(Dv.length/6);
+ Dv.forEach(function(r,i){if(i===Dv.length-1||(i%step===0&&Dv.length-1-i>=step))h+='<text x="'+X(i)+'" y="'+(H-8)+'" font-size="10" text-anchor="middle" fill="var(--mut)">'+r.d+'</text>'});
  s.innerHTML=h;
 }
 drawDam();
@@ -291,7 +302,7 @@ function loadHist(){
   var rows=(d.days||[]).filter(function(r){return r.c2!=null||r.c13!=null});
   if(rows.length<2)return;
   D=rows.map(function(r){var tm=(String(r.at||"").match(/(\d{2}:\d{2})/)||[])[1];return {d:dlab(r.date),c2:r.c2,c13:r.c13,today:r.date===todayIso(),tm:tm||""}});
-  drawDam();
+  HIST_OK=true;drawDam();
   var st=d.stations||{};
   if(st.c13&&st.c13.qmax)QMAX.c13=st.c13.qmax;
   if(st.c2&&st.c2.qmax)QMAX.c2=st.c2.qmax;
@@ -331,6 +342,7 @@ function updNorth(){
  });
  $("nList").innerHTML=s;
  if(YEAR&&YEAR_DONE)drawYear();
+ if(HIST_OK)drawDam();
 }
 
 /* ===== เทียบน้ำปีนี้กับปีน้ำท่วมใหญ่ (วางทับภาพสถิติ C.2) ===== */
@@ -340,7 +352,7 @@ function cx(d){return CAL.x0+(d-0.5)/365*CAL.xw}
 function cy(v){return CAL.y0-CAL.k*v}
 function doyOf(iso){var m=iso.match(/(\d{4})-(\d{2})-(\d{2})/);return Math.round((Date.UTC(+m[1],+m[2]-1,+m[3])-Date.UTC(+m[1],0,0))/86400000)}
 function todayIso(){return new Date(Date.now()+7*3600000).toISOString().slice(0,10)}
-var YEAR_DONE=false;
+var YEAR_DONE=false,HIST_OK=false;
 function drawYear(){
  if(!YEAR||!YEAR.length)return;
  var pts=YEAR.slice(),live=CUR.c2,td=todayIso();
