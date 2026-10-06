@@ -171,9 +171,10 @@ a{color:var(--c13)}
 <script>
 var BANK=1.20,WARN=.70,CRIT=.80,BED=-.25;
 var CUR={},NT={},QMAX={c13:2840,c2:3590};
+var TH=["","ม.ค.","ก.พ.","มี.ค.","เม.ย.","พ.ค.","มิ.ย.","ก.ค.","ส.ค.","ก.ย.","ต.ค.","พ.ย.","ธ.ค."];
 function num(v,d){return typeof v==="number"&&isFinite(v)?v:d}
 function $(i){return document.getElementById(i)}
-function lab(s){var m=s.match(/(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})/);return (+m[3])+"/"+(+m[2])+" "+m[4]+":"+m[5]}
+function lab(s){var m=s.match(/(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})/);return (+m[3])+" "+TH[+m[2]]+" "+m[4]+":"+m[5]}
 function f2(v){return v==null?"—":v.toFixed(2)+" ม."}
 
 function summary(bg,a,b,c){$("sum").style.background=bg;$("sA").textContent=a;$("sB").textContent=b;$("sC").textContent=c||""}
@@ -231,7 +232,7 @@ setInterval(function(){getCanal().then(render).catch(function(){})},300000);
 
 function nf(v){return Math.round(v).toLocaleString()}
 function arrow(t){return t==="เพิ่มขึ้น"?"แนวโน้มเพิ่มขึ้น ↑":t==="ลดลง"?"แนวโน้มลดลง ↓":t?"แนวโน้ม"+t+" →":""}
-function bkk(iso){var d=new Date(new Date(iso).getTime()+7*3600000);var p=function(n){return String(n).padStart(2,"0")};return d.getUTCDate()+"/"+(d.getUTCMonth()+1)+" "+p(d.getUTCHours())+":"+p(d.getUTCMinutes())}
+function bkk(iso){var d=new Date(new Date(iso).getTime()+7*3600000);var p=function(n){return String(n).padStart(2,"0")};return d.getUTCDate()+" "+TH[d.getUTCMonth()+1]+" "+p(d.getUTCHours())+":"+p(d.getUTCMinutes())}
 function loadDam(bust){
  return fetch("/api/dam"+(bust?"?r="+Date.now():"")).then(function(r){return r.ok?r.json():Promise.reject()}).then(function(d){
   var ts=[],old=false;
