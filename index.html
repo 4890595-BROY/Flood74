@@ -142,17 +142,6 @@ a{color:var(--c13)}
 <div class="n" id="damNote" style="margin:-4px 0 12px">ข้อมูลเขื่อน: 4 ต.ค. 2569 06:00 น. (กรมชลประทาน) บันทึกด้วยมือ กำลังตรวจหาข้อมูลล่าสุด…</div>
 
 <div class="card">
- <h2>ประวัติน้ำเขื่อน (ลบ.ม./วินาที) <span class="u" id="hs1">บันทึกด้วยมือ</span></h2>
- <div class="sw"><svg viewBox="0 0 360 190" id="ch" role="img" aria-label="กราฟ C.2 และ C.13"></svg></div>
- <div class="n"><span style="color:var(--c13)">● C.13</span> &nbsp; <span style="color:var(--c2)">● C.2</span></div>
-</div>
-
-<div class="card">
- <h2>ตารางประวัติเขื่อน <span class="u" id="hs2">บันทึกด้วยมือ</span></h2>
- <table id="tb"><tr><th>วันที่</th><th>C.2</th><th>C.13</th></tr></table>
-</div>
-
-<div class="card">
  <h2>บางแคเกี่ยวข้องอย่างไร</h2>
  <ul>
   <li>น้ำจากเขื่อนเจ้าพระยาใช้เวลาหลายวันกว่าจะถึง กทม. ยิ่งระบายสูง ระดับน้ำริมเจ้าพระยาและคลองเชื่อมยิ่งสูงขึ้น</li>
@@ -249,74 +238,15 @@ function loadDam(bust){
 }
 loadDam();setInterval(loadDam,900000);
 
-/* ===== ประวัติเขื่อน ===== */
-var TH=["","ม.ค.","ก.พ.","มี.ค.","เม.ย.","พ.ค.","มิ.ย.","ก.ค.","ส.ค.","ก.ย.","ต.ค.","พ.ย.","ธ.ค."];
+/* ===== ฟังก์ชันช่วย ===== */
 function dlab(iso){var m=iso.match(/(\d{4})-(\d{2})-(\d{2})/);return (+m[3])+" "+TH[+m[2]]}
-var D=[
- {d:"23 ก.ย.",c2:1737,c13:1620},
- {d:"29 ก.ย.",c2:2141,c13:2000},
- {d:"1 ต.ค.",c2:2610,c13:2300},
- {d:"2 ต.ค.",c2:2416,c13:2500},
- {d:"4 ต.ค.",c2:2132,c13:2500}
-];
 function updCap(){
  [["c13","cap13"],["c2","cap2"]].forEach(function(a){
   var q=CUR[a[0]],m=QMAX[a[0]],el=$(a[1]);
   if(q!=null&&m)el.textContent="ใช้ความจุลำน้ำประมาณ "+Math.round(q/m*100)+"% (รับได้ "+nf(m)+")";
  });
 }
-function viewRows(){
- return D.map(function(r){
-  if(!r.today)return r;
-  var o={d:r.d,c2:r.c2,c13:r.c13,today:true,tm:r.tm};
-  if(CUR.c2!=null)o.c2=CUR.c2;
-  if(CUR.c13!=null)o.c13=CUR.c13;
-  var m=(NT.c2||"").match(/(\d{2}:\d{2})/);if(m)o.tm=m[1];
-  return o;
- });
-}
-function drawDam(){
- var Dv=viewRows();
- var tb=$("tb");
- while(tb.rows.length>1)tb.deleteRow(1);
- Dv.slice(-10).reverse().forEach(function(r){var tr=tb.insertRow();tr.insertCell().textContent=r.d+(r.today?" (ล่าสุด"+(r.tm?" "+r.tm+" น.":"")+")":"");tr.insertCell().textContent=r.c2==null?"—":r.c2.toLocaleString();tr.insertCell().textContent=r.c13==null?"—":r.c13.toLocaleString();});
- var vals=[];Dv.forEach(function(r){if(r.c2!=null)vals.push(r.c2);if(r.c13!=null)vals.push(r.c13)});
- if(!vals.length){$("ch").innerHTML="";return}
- var mn=Math.floor(Math.min.apply(null,vals)*0.9/100)*100,mx=Math.ceil(Math.max.apply(null,vals)*1.08/100)*100;
- if(mx-mn<500)mx=mn+500;
- var s=$("ch"),W=360,H=190,pl=40,pr=10,pt=10,pb=28;
- function X(i){return Dv.length>1?pl+i*(W-pl-pr)/(Dv.length-1):pl}
- function Y(v){return pt+(mx-v)*(H-pt-pb)/(mx-mn)}
- var h="";
- [1,2,3].forEach(function(k){var g=Math.round((mn+k*(mx-mn)/4)/100)*100;h+='<line x1="'+pl+'" x2="'+(W-pr)+'" y1="'+Y(g)+'" y2="'+Y(g)+'" stroke="var(--bd)"/><text x="'+(pl-4)+'" y="'+(Y(g)+4)+'" font-size="10" text-anchor="end" fill="var(--mut)">'+g+'</text>'});
- function path(k,c){
-  var p="",gap=true,dots="";
-  Dv.forEach(function(r,i){var v=r[k];if(v==null){gap=true;return}p+=(gap?"M":"L")+X(i)+" "+Y(v);gap=false;dots+='<circle cx="'+X(i)+'" cy="'+Y(v)+'" r="3.5" fill="'+c+'"/>'});
-  return '<path d="'+p+'" fill="none" stroke="'+c+'" stroke-width="2.5"/>'+dots}
- h+=path("c2","var(--c2)")+path("c13","var(--c13)");
- var step=Math.ceil(Dv.length/6);
- Dv.forEach(function(r,i){if(i===Dv.length-1||(i%step===0&&Dv.length-1-i>=step))h+='<text x="'+X(i)+'" y="'+(H-8)+'" font-size="10" text-anchor="middle" fill="var(--mut)">'+r.d+'</text>'});
- s.innerHTML=h;
-}
-drawDam();
-function loadHist(){
- fetch("/api/hii").then(function(r){return r.ok?r.json():Promise.reject()}).then(function(d){
-  var rows=(d.days||[]).filter(function(r){return r.c2!=null||r.c13!=null});
-  if(rows.length<2)return;
-  D=rows.map(function(r){var tm=(String(r.at||"").match(/(\d{2}:\d{2})/)||[])[1];return {d:dlab(r.date),c2:r.c2,c13:r.c13,today:r.date===todayIso(),tm:tm||""}});
-  HIST_OK=true;drawDam();
-  var st=d.stations||{};
-  if(st.c13&&st.c13.qmax)QMAX.c13=st.c13.qmax;
-  if(st.c2&&st.c2.qmax)QMAX.c2=st.c2.qmax;
-  var last=rows[rows.length-1];
-  if(CUR.c13==null&&last.c13!=null)CUR.c13=last.c13;
-  if(CUR.c2==null&&last.c2!=null)CUR.c2=last.c2;
-  updCap();updNorth();
-  $("hs1").textContent="รายวัน จาก สสน./กรมชลประทาน";
-  $("hs2").textContent="รายวัน · แถววันนี้คือค่าล่าสุด";
- }).catch(function(){});
-}
-loadHist();setInterval(loadHist,3600000);
+
 
 /* ===== สรุปน้ำจากภาคเหนือ (อ้างอิง C.2) ===== */
 var NLV=[
@@ -345,7 +275,6 @@ function updNorth(){
  $("nList").innerHTML=s;
  if(YEAR&&YEAR_DONE)drawYear();
  if(YEAR_FAIL)drawYearLive();
- if(HIST_OK)drawDam();
 }
 
 /* ===== เทียบน้ำปีนี้กับปีน้ำท่วมใหญ่ (วางทับภาพสถิติ C.2) ===== */
@@ -355,7 +284,7 @@ function cx(d){return CAL.x0+(d-0.5)/365*CAL.xw}
 function cy(v){return CAL.y0-CAL.k*v}
 function doyOf(iso){var m=iso.match(/(\d{4})-(\d{2})-(\d{2})/);return Math.round((Date.UTC(+m[1],+m[2]-1,+m[3])-Date.UTC(+m[1],0,0))/86400000)}
 function todayIso(){return new Date(Date.now()+7*3600000).toISOString().slice(0,10)}
-var YEAR_DONE=false,HIST_OK=false,YEAR_FAIL=false,YEAR_ERR="";
+var YEAR_DONE=false,YEAR_FAIL=false,YEAR_ERR="";
 function drawYear(){
  if(!YEAR||!YEAR.length)return;
  var pts=YEAR.slice(),live=CUR.c2,td=todayIso();
