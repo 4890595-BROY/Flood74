@@ -57,7 +57,7 @@ function pickItc(json) {
   return out;
 }
 
-async function fetchDay(day) {
+async function fetchDayRaw(day) {
   const ctrl = new AbortController();
   const timer = setTimeout(() => ctrl.abort(), 9000);
   try {
@@ -74,6 +74,20 @@ async function fetchDay(day) {
     return { day, data: pickItc(extractJson(await r.text())) };
   } finally {
     clearTimeout(timer);
+  }
+}
+
+// ครอบด้วยตัวแปลข้อความผิดพลาด: "fetch failed" ของ Node ไม่บอกอะไร ดึงรหัสสาเหตุจริงออกมาแสดง
+async function fetchDay(day) {
+  try {
+    return await fetchDayRaw(day);
+  } catch (e) {
+    if (e && e.name === "AbortError") throw new Error("หมดเวลารอ สสน.");
+    if (e && e.message === "fetch failed") {
+      const code = (e.cause && (e.cause.code || e.cause.message)) || "ไม่ทราบสาเหตุ";
+      throw new Error("เชื่อมต่อ สสน. ไม่ได้ (" + code + ")");
+    }
+    throw e;
   }
 }
 
@@ -106,7 +120,7 @@ async function handler(req, res) {
     }
     const rows = [...byDate.values()].sort((a, b) => (a.date < b.date ? -1 : 1));
     if (!rows.length) throw new Error(firstErr || "ไม่พบข้อมูล C.2/C.13");
-    res.setHeader("Cache-Control", "s-maxage=1800, stale-while-revalidate=3600");
+    res.setHeader("Cache-Control", "s-maxage=3600, stale-while-revalidate=7200");
     res.status(200).json({ days: rows, stations: meta, requested: DAYS });
   } catch (e) {
     res.status(502).json({ error: String(e.message || e) });

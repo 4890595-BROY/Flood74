@@ -234,7 +234,7 @@ function nf(v){return Math.round(v).toLocaleString()}
 function arrow(t){return t==="เพิ่มขึ้น"?"แนวโน้มเพิ่มขึ้น ↑":t==="ลดลง"?"แนวโน้มลดลง ↓":t?"แนวโน้ม"+t+" →":""}
 function bkk(iso){var d=new Date(new Date(iso).getTime()+7*3600000);var p=function(n){return String(n).padStart(2,"0")};return d.getUTCDate()+" "+TH[d.getUTCMonth()+1]+" "+p(d.getUTCHours())+":"+p(d.getUTCMinutes())}
 function loadDam(bust){
- return fetch("/api/dam"+(bust?"?r="+Date.now():"")).then(function(r){return r.ok?r.json():Promise.reject()}).then(function(d){
+ return fetch("/api/dam"+(bust?"?r="+Date.now():"")).then(function(r){return r.json().then(function(j){return r.ok?j:Promise.reject(j)},function(){return Promise.reject({error:"เซิร์ฟเวอร์ตอบกลับ "+r.status})})}).then(function(d){
   var ts=[],old=false;
   [["c13","q13","t13"],["c2","q2","t2"]].forEach(function(a){
    var x=d[a[0]];if(!x||x.q==null)return;CUR[a[0]]=x.q;
@@ -244,7 +244,8 @@ function loadDam(bust){
   });
   updCap();updNorth();
   $("damNote").textContent=ts.length?(old?"⚠ ข้อมูลเขื่อนเก่า ล่าสุด ":"ข้อมูลเขื่อนล่าสุด ")+ts[0]+" น. (กรมชลประทาน อัปเดตอัตโนมัติ)":"ดึงข้อมูลเขื่อนอัตโนมัติไม่ได้ ใช้ค่าที่บันทึกด้วยมือ (4 ต.ค. 06:00 น.)";
- }).catch(function(){$("damNote").textContent="ดึงข้อมูลเขื่อนอัตโนมัติไม่ได้ ใช้ค่าที่บันทึกด้วยมือ (4 ต.ค. 06:00 น.)";if(CUR.c2==null){$("nHead").textContent="ยังดึงข้อมูลไม่ได้";$("nHead").style.color="var(--mut)"}});
+  if(!d.c2||d.c2.q==null)$("damNote").textContent+=" · ไม่พบค่า C.2 ในข้อมูลกรมชลประทานตอนนี้";
+ }).catch(function(e){$("damNote").textContent="ดึงข้อมูลเขื่อนอัตโนมัติไม่ได้ ใช้ค่าที่บันทึกด้วยมือ (4 ต.ค. 06:00 น.)"+(e&&e.error?" · สาเหตุ: "+e.error:"");if(CUR.c2==null){$("nHead").textContent="ยังดึงข้อมูลไม่ได้";$("nHead").style.color="var(--mut)"}});
 }
 loadDam();setInterval(loadDam,900000);
 
@@ -343,6 +344,7 @@ function updNorth(){
  });
  $("nList").innerHTML=s;
  if(YEAR&&YEAR_DONE)drawYear();
+ if(YEAR_FAIL)drawYearLive();
  if(HIST_OK)drawDam();
 }
 
@@ -353,7 +355,7 @@ function cx(d){return CAL.x0+(d-0.5)/365*CAL.xw}
 function cy(v){return CAL.y0-CAL.k*v}
 function doyOf(iso){var m=iso.match(/(\d{4})-(\d{2})-(\d{2})/);return Math.round((Date.UTC(+m[1],+m[2]-1,+m[3])-Date.UTC(+m[1],0,0))/86400000)}
 function todayIso(){return new Date(Date.now()+7*3600000).toISOString().slice(0,10)}
-var YEAR_DONE=false,HIST_OK=false;
+var YEAR_DONE=false,HIST_OK=false,YEAR_FAIL=false,YEAR_ERR="";
 function drawYear(){
  if(!YEAR||!YEAR.length)return;
  var pts=YEAR.slice(),live=CUR.c2,td=todayIso();
@@ -377,6 +379,16 @@ function drawYear(){
   $("cmpSub").innerHTML="ค่ารายวันล่าสุดของ "+dlab(last.date)+"<br>เดือนก่อนๆ ดึงข้อมูลมา เดือนละ 2 จุด<br>เดือนนี้ ดึงข้อมูลแบบรายวัน จาก สสน. ·<br>เส้นดำคือของปีนี้"+part;
  }
 }
+function drawYearLive(){
+ var q=CUR.c2;
+ if(q==null)return;
+ var L=[cx(doyOf(todayIso())),cy(q)];
+ $("cmpSvg").innerHTML='<circle cx="'+L[0].toFixed(1)+'" cy="'+L[1].toFixed(1)+'" r="11" fill="#111" stroke="#fff" stroke-width="4"/>'
+  +'<text x="'+(L[0]-18).toFixed(1)+'" y="'+(L[1]-16).toFixed(1)+'" text-anchor="end" font-size="28" font-weight="700" fill="#111" stroke="#fff" stroke-width="6" paint-order="stroke">ปีนี้ '+nf(q)+'</text>';
+ $("cmpHead").style.color="var(--tx)";
+ $("cmpHead").textContent="ตอนนี้ "+nf(q)+" ลบ.ม./วินาที";
+ $("cmpSub").innerHTML="ค่าล่าสุด"+(NT.c2?" "+NT.c2+" น.":"")+"<br>ยังดึงเส้นย้อนหลังของปีนี้ไม่ได้ จึงแสดงเฉพาะจุดของวันนี้<br>สาเหตุ: "+YEAR_ERR;
+}
 var YEAR_GAPS=false;
 function getMonth(mm,retry){
  return fetch("/api/year?m="+mm).then(function(r){
@@ -388,14 +400,16 @@ function getMonth(mm,retry){
 }
 function loadYear(){
  var cm=new Date(Date.now()+7*3600000).getUTCMonth()+1,m=1,map={},lastErr="";
- YEAR_DONE=false;YEAR_GAPS=false;
+ YEAR_DONE=false;YEAR_GAPS=false;YEAR_FAIL=false;
  $("cmpHead").style.color="var(--mut)";
  $("cmpHead").textContent="กำลังโหลดข้อมูลปีนี้…";
  function finish(){
   var arr=Object.keys(map).sort().map(function(k){return map[k]});
   if(arr.length<2){
+   YEAR_FAIL=true;YEAR_ERR=lastErr||"ไม่ทราบ";
    $("cmpHead").textContent="ยังดึงข้อมูลปีนี้ไม่ได้";
-   $("cmpSub").textContent="สาเหตุ: "+(lastErr||"ไม่ทราบ")+" · กราฟสถิติด้านล่างยังดูได้";
+   $("cmpSub").textContent="สาเหตุ: "+YEAR_ERR+" · กราฟสถิติด้านล่างยังดูได้";
+   drawYearLive();
    return;
   }
   YEAR=arr;YEAR_DONE=true;drawYear();

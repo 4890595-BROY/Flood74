@@ -6,19 +6,28 @@ const WANT = { "C.13": "c13", "C.2": "c2" };
 function pick(json) {
   const rows = Array.isArray(json) ? json : json && json.data;
   if (!Array.isArray(rows)) throw new Error("unexpected response shape");
-  const out = {};
+  const best = {};
   for (const r of rows) {
     const key = WANT[String(r.station_code || "").trim()];
-    if (!key || out[key]) continue;
-    out[key] = {
+    if (!key) continue;
+    const rec = {
       q: r.q_values == null ? null : Number(r.q_values), // ลบ.ม./วินาที
       wl: r.wl_values_msl == null ? null : Number(r.wl_values_msl), // ม.รทก.
+      qmax: r.q_max == null ? null : Number(r.q_max), // อัตราการไหลสูงสุด ตามที่ SWOC แสดง
       trend: r.q_trend || null,
       name: r.station_detail || null,
       timeUtc: r.hourly_time_utc || null,
+      agency: r.agency_type || null,
     };
+    // ถ้ามีหลายรายการรหัสเดียวกัน: เลือกรายการที่มีค่า q ก่อน แล้วเลือกรายการที่ใหม่กว่า
+    const cur = best[key];
+    const better =
+      !cur ||
+      (cur.q == null && rec.q != null) ||
+      (cur.q != null && rec.q != null && (rec.timeUtc || "") > (cur.timeUtc || ""));
+    if (better) best[key] = rec;
   }
-  return out;
+  return best;
 }
 
 async function handler(req, res) {
