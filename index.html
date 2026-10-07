@@ -34,7 +34,7 @@ a{color:var(--c13)}
 #sum{text-align:center;padding:20px 14px;color:#fff;background:#6b7785;border-color:transparent}
 #sum .a{font-size:30px;font-weight:700;margin:4px 0}
 #sum .b{font-size:18px}
-#sum .c{margin-top:8px;font-size:13px;opacity:.9}
+#sum .c{margin-top:8px;font-size:18px;opacity:.9}
 .bar{position:relative;height:12px;border-radius:6px;background:var(--bd);margin:14px 0 6px}
 .bar i{position:absolute;display:block}
 .rf-btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;min-height:48px;padding:10px 12px;border:0;border-radius:14px;background:linear-gradient(135deg,#00897b,#26a69a);color:#fff;font:inherit;font-size:15px;font-weight:700;line-height:1.2;box-shadow:0 3px 10px rgba(0,137,123,.35);cursor:pointer;-webkit-tap-highlight-color:transparent;transition:transform .1s,opacity .2s}
@@ -177,7 +177,7 @@ function $(i){return document.getElementById(i)}
 function lab(s){var m=s.match(/(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})/);return (+m[3])+" "+TH[+m[2]]+" "+m[4]+":"+m[5]}
 function f2(v){return v==null?"—":v.toFixed(2)+" ม."}
 
-function summary(bg,a,b,c){$("sum").style.background=bg;$("sA").textContent=a;$("sB").textContent=b;$("sC").textContent=c||""}
+function summary(bg,a,b,c,fg){$("sum").style.background=bg;$("sum").style.color=fg||"#fff";$("sA").textContent=a;$("sB").textContent=b;$("sC").textContent=c||""}
 
 function fail(err){
  var why=err&&err.error?"สาเหตุ: "+err.error:"หรือดูจุดวัดสดที่ลิงก์ท้ายหน้า";
@@ -215,8 +215,8 @@ function render(d){
  var ageMin=(Date.now()-new Date(d.latestT+":00+07:00").getTime())/60000;
  var cStale=ageMin>90?"⚠ ข้อมูลเก่า ล่าสุดเมื่อ "+lab(d.latestT)+" น.":"ข้อมูล "+lab(d.latestT)+" น.";
  if(L>=BANK){summary("#c62828","น้ำล้นตลิ่ง","ระวังตัวและติดตามประกาศ กทม.",cStale);$("stat").textContent="● ระดับน้ำเกินตลิ่ง"}
- else if(L>=CRIT){summary("#c62828","ระวัง น้ำสูง","น้ำในคลองท้ายซอยสูงมาก ควรเตรียมพร้อม",cStale);$("stat").textContent="● วิกฤต · เหลืออีก "+toBank+" ซม. ถึงตลิ่ง"}
- else if(L>=WARN){summary("#b26a00","ควรติดตามดู","น้ำในคลองท้ายซอยเริ่มสูง แต่ยังไม่ล้นตลิ่ง",cStale);$("stat").textContent="● เฝ้าระวัง · เหลืออีก "+toBank+" ซม. ถึงตลิ่ง"}
+ else if(L>=CRIT){summary("#d14900","ระวัง น้ำสูง","น้ำในคลองท้ายซอยสูงมาก ควรเตรียมพร้อม",cStale);$("stat").textContent="● วิกฤต · เหลืออีก "+toBank+" ซม. ถึงตลิ่ง"}
+ else if(L>=WARN){summary("#fbc02d","ควรติดตามดู","น้ำในคลองท้ายซอยเริ่มสูง",cStale,"#1f1f1f");$("stat").textContent="● เฝ้าระวัง · เหลืออีก "+toBank+" ซม. ถึงตลิ่ง"}
  else{summary("#2e7d32","ตอนนี้ปกติ","น้ำในคลองท้ายซอยยังต่ำ ยังห่างตลิ่งมาก",cStale);$("stat").innerHTML='<span style="color:#43a047">●</span> ปกติ · อีก '+toWarn+' ซม. ถึงระดับเฝ้าระวัง'}
  $("head").innerHTML="เหลือ "+Math.max(toBank,0)+' <span class="u" style="font-size:16px">ซม. ถึงตลิ่ง</span>';
  $("vFill").style.height=pct(L)+"%";$("vFill").style.background=L>=CRIT?"#e53935":L>=WARN?"#fb8c00":"var(--c2)";$("vNow").style.bottom=pct(L)+"%";$("vNow").textContent=L.toFixed(2);
