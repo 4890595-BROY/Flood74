@@ -27,6 +27,7 @@ async function handler(req, res) {
     const byDate = new Map();
     let qmax = null;
     let firstErr = null;
+    let tlsRelaxed = false;
     for (let i = 0; i < days.length; i += CONC) {
       const results = await Promise.allSettled(days.slice(i, i + CONC).map(fetchDay));
       for (const r of results) {
@@ -34,6 +35,7 @@ async function handler(req, res) {
           firstErr = firstErr || (r.reason && r.reason.message) || String(r.reason);
           continue;
         }
+        if (r.value.relaxed) tlsRelaxed = true;
         const v = r.value.data.c2;
         if (!v || v.q == null) continue;
         const d = v.date || r.value.day;
@@ -48,7 +50,7 @@ async function handler(req, res) {
       "Cache-Control",
       m < curMonth ? "s-maxage=604800, stale-while-revalidate=86400" : "s-maxage=3600, stale-while-revalidate=7200"
     );
-    res.status(200).json({ year, month: m, points, qmax, requested: days.length });
+    res.status(200).json({ year, month: m, points, qmax, requested: days.length, tlsRelaxed });
   } catch (e) {
     res.status(502).json({ error: String(e.message || e) });
   }

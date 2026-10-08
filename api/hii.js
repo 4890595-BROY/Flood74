@@ -57,24 +57,76 @@ function pickItc(json) {
   return out;
 }
 
-async function fetchDayRaw(day) {
-  const ctrl = new AbortController();
-  const timer = setTimeout(() => ctrl.abort(), 9000);
-  try {
-    const r = await fetch(SOURCE, {
-      method: "POST",
-      signal: ctrl.signal,
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
-        "User-Agent": "Mozilla/5.0 (flood-dashboard-personal)",
+// เว็บ สสน. ส่งใบรับรองความปลอดภัย (SSL) มาไม่ครบ (ขาด intermediate certificate) เบราว์เซอร์ทั่วไปมองข้ามได้ แต่ Node ปฏิเสธ
+// (UNABLE_TO_VERIFY_LEAF_SIGNATURE) ระบบจึงตรวจแบบปกติก่อนเสมอ และถ้าเจอ "ใบรับรองไม่ครบ" เท่านั้น
+// จึงลองใหม่เฉพาะกับเว็บนี้โดยไม่ตรวจใบรับรอง แล้วแจ้งผู้ใช้ผ่านช่อง relaxed/tlsRelaxed (ใบรับรองหมดอายุหรือปลอมจะไม่ผ่านทางนี้)
+const https = require("https");
+const CERT_CHAIN_INCOMPLETE = new Set([
+  "UNABLE_TO_VERIFY_LEAF_SIGNATURE",
+  "UNABLE_TO_GET_ISSUER_CERT_LOCALLY",
+  "UNABLE_TO_GET_ISSUER_CERT",
+]);
+let relaxedTls = false;
+
+function postRelaxed(urlStr, body, ms) {
+  return new Promise((resolve, reject) => {
+    const u = new URL(urlStr);
+    const req = https.request(
+      {
+        hostname: u.hostname,
+        port: 443,
+        path: u.pathname + u.search,
+        method: "POST",
+        rejectUnauthorized: false,
+        timeout: ms,
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+          "Content-Length": Buffer.byteLength(body),
+          "User-Agent": "Mozilla/5.0 (flood-dashboard-personal)",
+        },
       },
-      body: "datepicker=" + day,
-    });
-    if (!r.ok) throw new Error("สสน. ตอบกลับ " + r.status);
-    return { day, data: pickItc(extractJson(await r.text())) };
-  } finally {
-    clearTimeout(timer);
+      (res) => {
+        const chunks = [];
+        res.on("data", (c) => chunks.push(c));
+        res.on("end", () => {
+          const text = Buffer.concat(chunks).toString("utf8");
+          resolve({ ok: res.statusCode >= 200 && res.statusCode < 300, status: res.statusCode, text: async () => text });
+        });
+      }
+    );
+    req.on("timeout", () => req.destroy(Object.assign(new Error("timeout"), { name: "AbortError" })));
+    req.on("error", reject);
+    req.write(body);
+    req.end();
+  });
+}
+
+async function fetchDayRaw(day) {
+  const body = "datepicker=" + day;
+  let r = null;
+  if (!relaxedTls) {
+    const ctrl = new AbortController();
+    const timer = setTimeout(() => ctrl.abort(), 9000);
+    try {
+      r = await fetch(SOURCE, {
+        method: "POST",
+        signal: ctrl.signal,
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+          "User-Agent": "Mozilla/5.0 (flood-dashboard-personal)",
+        },
+        body,
+      });
+    } catch (e) {
+      if (e && e.cause && CERT_CHAIN_INCOMPLETE.has(e.cause.code)) relaxedTls = true;
+      else throw e;
+    } finally {
+      clearTimeout(timer);
+    }
   }
+  if (!r) r = await postRelaxed(SOURCE, body, 9000);
+  if (!r.ok) throw new Error("สสน. ตอบกลับ " + r.status);
+  return { day, data: pickItc(extractJson(await r.text())), relaxed: relaxedTls };
 }
 
 // ครอบด้วยตัวแปลข้อความผิดพลาด: "fetch failed" ของ Node ไม่บอกอะไร ดึงรหัสสาเหตุจริงออกมาแสดง
@@ -83,6 +135,7 @@ async function fetchDay(day) {
     return await fetchDayRaw(day);
   } catch (e) {
     if (e && e.name === "AbortError") throw new Error("หมดเวลารอ สสน.");
+    if (e && e.code && !e.cause && e.message !== "fetch failed") throw new Error("เชื่อมต่อ สสน. ไม่ได้ (" + e.code + ")");
     if (e && e.message === "fetch failed") {
       const code = (e.cause && (e.cause.code || e.cause.message)) || "ไม่ทราบสาเหตุ";
       throw new Error("เชื่อมต่อ สสน. ไม่ได้ (" + code + ")");

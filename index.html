@@ -120,7 +120,7 @@ a{color:var(--c13)}
  <div class="k">📈 เทียบน้ำปีนี้ กับปีน้ำท่วมใหญ่ · C.2 นครสวรรค์</div>
  <div id="cmpHead" style="font-size:20px;font-weight:700;margin:4px 0;line-height:1.3;color:var(--mut)">กำลังโหลดข้อมูลปีนี้…</div>
  <div class="n" id="cmpSub" style="line-height:1.6"></div>
- <div class="sw" style="margin-top:10px;border-radius:10px;background:#fff">
+ <div class="sw" id="cmpSw" style="margin-top:10px;border-radius:10px;background:#fff">
   <div style="position:relative;min-width:760px">
    <img src="c2-history.png" alt="กราฟสถิติปริมาณน้ำรายวัน C.2 ปี 2538 2545 2549 2554" style="display:block;width:100%;height:auto">
    <svg id="cmpSvg" viewBox="0 0 1408 675" preserveAspectRatio="none" style="position:absolute;left:0;top:0;width:100%;height:100%"></svg>
@@ -284,7 +284,8 @@ function cx(d){return CAL.x0+(d-0.5)/365*CAL.xw}
 function cy(v){return CAL.y0-CAL.k*v}
 function doyOf(iso){var m=iso.match(/(\d{4})-(\d{2})-(\d{2})/);return Math.round((Date.UTC(+m[1],+m[2]-1,+m[3])-Date.UTC(+m[1],0,0))/86400000)}
 function todayIso(){return new Date(Date.now()+7*3600000).toISOString().slice(0,10)}
-var YEAR_DONE=false,YEAR_FAIL=false,YEAR_ERR="";
+var YEAR_DONE=false,YEAR_FAIL=false,YEAR_ERR="",YEAR_TLS=false;
+var TLS_NOTE="<br>หมายเหตุ: เว็บ สสน. ส่งใบรับรองความปลอดภัยมาไม่ครบ ระบบจึงตรวจใบรับรองของข้อมูลเส้นนี้ไม่ได้";
 function drawYear(){
  if(!YEAR||!YEAR.length)return;
  var pts=YEAR.slice(),live=CUR.c2,td=todayIso();
@@ -302,10 +303,10 @@ function drawYear(){
  var part=YEAR_GAPS?"<br>ข้อมูลบางช่วงยังขาด":"";
  if(live!=null){
   $("cmpHead").textContent="ตอนนี้ "+nf(live)+" ลบ.ม./วินาที";
-  $("cmpSub").innerHTML="ค่าล่าสุด"+(NT.c2?" "+NT.c2+" น.":"")+"<br>เดือนก่อนๆ ดึงข้อมูลมา เดือนละ 2 จุด<br>เดือนนี้ ดึงข้อมูลแบบรายวัน จาก สสน. ·<br>เส้นดำคือของปีนี้"+part;
+  $("cmpSub").innerHTML="ค่าล่าสุด"+(NT.c2?" "+NT.c2+" น.":"")+"<br>เดือนก่อนๆ ดึงข้อมูลมา เดือนละ 2 จุด<br>เดือนนี้ ดึงข้อมูลแบบรายวัน จาก สสน. ·<br>เส้นดำคือของปีนี้"+part+(YEAR_TLS?TLS_NOTE:"");
  }else{
   $("cmpHead").textContent="ล่าสุด "+nf(last.q)+" ลบ.ม./วินาที";
-  $("cmpSub").innerHTML="ค่ารายวันล่าสุดของ "+dlab(last.date)+"<br>เดือนก่อนๆ ดึงข้อมูลมา เดือนละ 2 จุด<br>เดือนนี้ ดึงข้อมูลแบบรายวัน จาก สสน. ·<br>เส้นดำคือของปีนี้"+part;
+  $("cmpSub").innerHTML="ค่ารายวันล่าสุดของ "+dlab(last.date)+"<br>เดือนก่อนๆ ดึงข้อมูลมา เดือนละ 2 จุด<br>เดือนนี้ ดึงข้อมูลแบบรายวัน จาก สสน. ·<br>เส้นดำคือของปีนี้"+part+(YEAR_TLS?TLS_NOTE:"");
  }
 }
 function drawYearLive(){
@@ -321,7 +322,7 @@ function drawYearLive(){
 var YEAR_GAPS=false;
 function getMonth(mm,retry){
  return fetch("/api/year?m="+mm).then(function(r){
-  return r.json().then(function(j){return r.ok?j.points:Promise.reject(j)},function(){return Promise.reject({error:"เซิร์ฟเวอร์ตอบกลับ "+r.status})});
+  return r.json().then(function(j){if(r.ok&&j.tlsRelaxed)YEAR_TLS=true;return r.ok?j.points:Promise.reject(j)},function(){return Promise.reject({error:"เซิร์ฟเวอร์ตอบกลับ "+r.status})});
  }).catch(function(e){
   if(retry<1)return new Promise(function(res){setTimeout(res,1500)}).then(function(){return getMonth(mm,retry+1)});
   throw e;
@@ -380,6 +381,17 @@ function refreshAll(){
   msg.textContent="เชื่อมต่อไม่ได้ ยังเป็นข้อมูลเดิม ลองกดใหม่อีกครั้ง";
  }).then(rfDone);
 }
+
+/* ===== เปิดกราฟเทียบปีนี้ให้เลื่อนมาที่ช่วงเวลาปัจจุบันเป็นค่าเริ่มต้น ===== */
+function scrollCmpToToday(){
+ var sw=$("cmpSw");if(!sw||!sw.firstElementChild)return;
+ var W=sw.firstElementChild.scrollWidth,vw=sw.clientWidth;
+ if(!(W>vw))return;
+ var x=cx(doyOf(todayIso()))/1408*W;
+ sw.scrollLeft=Math.max(0,Math.min(W-vw,x-vw*0.6));
+}
+scrollCmpToToday();
+window.addEventListener("load",scrollCmpToToday);
 </script>
 </body>
 </html>
