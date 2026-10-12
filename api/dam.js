@@ -1,7 +1,7 @@
 // Vercel serverless function: ดึงอัตราน้ำไหลผ่านสถานี C.13 (ท้ายเขื่อนเจ้าพระยา) และ C.2 (นครสวรรค์)
 // จาก API เปิดของกรมชลประทาน (SWOC) แล้วส่งเป็น JSON ให้หน้าเว็บ
 const URL_SWOC = "https://bigdata-swoc.rid.go.th/api/ma/pier/all/get_pier_data";
-const WANT = { "C.13": "c13", "C.2": "c2" };
+const WANT = { "C.13": "c13", "C.2": "c2", "C.3": "c3", "C.7A": "c7a", "C.35": "c35" };
 
 function pick(json) {
   const rows = Array.isArray(json) ? json : json && json.data;

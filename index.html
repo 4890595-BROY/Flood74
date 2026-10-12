@@ -45,13 +45,25 @@ a{color:var(--c13)}
 #rfMsg{font-size:12px;line-height:1.45;margin-top:6px}
 #rfMsg.ok b{color:#2e7d32}
 #rfMsg.err{color:#c62828}
+.rv-node{border:1px solid var(--bd);border-radius:12px;padding:10px 12px;background:var(--bg)}
+.rv-head{display:flex;justify-content:space-between;align-items:baseline;gap:8px;font-size:14px}
+.rv-q{font-size:30px;font-weight:700;line-height:1.1}
+.rv-bar{height:8px;border-radius:4px;background:var(--bd);margin:8px 0 4px;overflow:hidden}
+.rv-bar i{display:block;height:100%;border-radius:4px}
+.rv-link{display:flex;align-items:center;justify-content:center;gap:10px;padding:6px 0;font-size:13px;color:var(--mut)}
+.rv-arrows{display:flex;flex-direction:column;line-height:.75;font-size:13px;color:#1e88e5}
+.rv-arrows span{opacity:.2;animation:rvflow 1.2s infinite}
+.rv-arrows span:nth-child(2){animation-delay:.2s}
+.rv-arrows span:nth-child(3){animation-delay:.4s}
+@keyframes rvflow{0%,100%{opacity:.15}50%{opacity:1}}
+@media (prefers-reduced-motion:reduce){.rv-arrows span{animation:none;opacity:.7}}
 </style>
 </head>
 <body>
 <div class="w">
 <div style="display:flex;justify-content:space-between;align-items:baseline;gap:8px">
 <h1 style="flex:1;min-width:0">🌊 ความเสี่ยงน้ำท่วม ซอยเพชรเกษม 74</h1>
-<span style="flex:none;font-size:12px;color:var(--mut)">V 1.2</span>
+<span style="flex:none;font-size:12px;color:var(--mut)">V 1.2.1</span>
 </div>
 <div class="sub">ข้อมูลอัปเดตอัตโนมัติ · ถ้าดึงไม่ได้จะบอกไว้ในแต่ละส่วน</div>
 
@@ -126,20 +138,16 @@ a{color:var(--c13)}
    <svg id="cmpSvg" viewBox="0 0 1408 675" preserveAspectRatio="none" style="position:absolute;left:0;top:0;width:100%;height:100%"></svg>
   </div>
  </div>
- <div class="n" style="margin-top:6px;line-height:1.6">เส้นดำหนา = ปีนี้ · เลื่อนกราฟดูซ้าย–ขวาได้<br>เส้นประแดง = ความจุลำน้ำ 3,590 ลบ.ม./วินาที<br>กราฟปี 2538 / 2545 / 2549 / 2554 เป็นภาพสถิติเดิม ปีนี้นำมาวางทับเทียบ</div>
+ <div class="n" style="margin-top:6px;line-height:1.6">เส้นดำหนา = ปีนี้ · เลื่อนกราฟดูซ้าย–ขวาได้<br>เส้นประแดง = ความจุลำน้ำ 3,590 ลบ.ม./วินาที<br>เส้นประม่วง = ค่าเฉลี่ยรายเดือน 30 ปี (2531–2560) ของ C.2 จากรายงานกรมชลประทาน<br>กราฟปี 2538 / 2545 / 2549 / 2554 เป็นภาพสถิติเดิม ปีนี้นำมาวางทับเทียบ</div>
 </div>
 
-<div class="g">
- <div class="card"><div class="k">C.2 นครสวรรค์</div>
-  <div class="v" style="color:var(--c2)"><span id="q2">2,132</span> <span class="u">ลบ.ม./วิ</span></div>
-  <div class="t" id="t2">แนวโน้มลดลง ↓</div>
-  <div class="n" id="cap2" style="margin-top:4px"></div></div>
- <div class="card"><div class="k">C.13 ท้ายเขื่อนเจ้าพระยา (ชัยนาท)</div>
-  <div class="v" style="color:var(--c13)"><span id="q13">2,500</span> <span class="u">ลบ.ม./วิ</span></div>
-  <div class="t" id="t13">เหนือเขื่อน +17.71 ม.รทก.</div>
-  <div class="n" id="cap13" style="margin-top:4px"></div></div>
+<div class="card" id="riverCard">
+ <div class="k">🗺️ แผนผังน้ำเจ้าพระยา · นครสวรรค์ → อยุธยา</div>
+ <div style="font-size:20px;font-weight:700;margin:4px 0">น้ำไหลลงมาถึงไหนแล้ว</div>
+ <div class="n" id="riverTime">กำลังโหลด…</div>
+ <div id="riverBody" style="margin-top:10px"></div>
+ <div class="n" style="margin-top:10px;line-height:1.6">เวลาที่น้ำเดินทางจาก C.2 ถึง C.35 รวมประมาณ 48 ชม. (ระยะทางรวม 227 กม.) ตามรายงานกรมชลประทาน<br>ระยะทาง เวลา ระดับตลิ่ง และความจุลำน้ำ ตามรายงานสถานการณ์น้ำแม่น้ำเจ้าพระยา 12 ต.ค. 2569 · หน้านี้วาดขึ้นใหม่ ไม่ได้คัดลอกภาพจากเว็บกรมชลประทาน<br><a href="https://hyd-app-db.rid.go.th/SVG/flow_water.html?svg=hydro5_637977164104194493" target="_blank" rel="noopener">ดูแผนผังต้นฉบับของกรมชลประทาน ↗</a></div>
 </div>
-<div class="n" id="damNote" style="margin:-4px 0 12px">ข้อมูลเขื่อน: 4 ต.ค. 2569 06:00 น. (กรมชลประทาน) บันทึกด้วยมือ กำลังตรวจหาข้อมูลล่าสุด…</div>
 
 <div class="card">
  <h2>บางแคเกี่ยวข้องอย่างไร</h2>
@@ -159,7 +167,7 @@ a{color:var(--c13)}
 
 <script>
 var BANK=1.20,WARN=.70,CRIT=.80,BED=-.25;
-var CUR={},NT={},QMAX={c13:2840,c2:3590};
+var CUR={},NT={},QMAX={c13:2720,c2:3735};
 var TH=["","ม.ค.","ก.พ.","มี.ค.","เม.ย.","พ.ค.","มิ.ย.","ก.ค.","ส.ค.","ก.ย.","ต.ค.","พ.ย.","ธ.ค."];
 function num(v,d){return typeof v==="number"&&isFinite(v)?v:d}
 function $(i){return document.getElementById(i)}
@@ -224,30 +232,21 @@ function arrow(t){return t==="เพิ่มขึ้น"?"แนวโน้�
 function bkk(iso){var d=new Date(new Date(iso).getTime()+7*3600000);var p=function(n){return String(n).padStart(2,"0")};return d.getUTCDate()+" "+TH[d.getUTCMonth()+1]+" "+p(d.getUTCHours())+":"+p(d.getUTCMinutes())}
 function loadDam(bust){
  return fetch("/api/dam"+(bust?"?r="+Date.now():"")).then(function(r){return r.json().then(function(j){return r.ok?j:Promise.reject(j)},function(){return Promise.reject({error:"เซิร์ฟเวอร์ตอบกลับ "+r.status})})}).then(function(d){
-  var ts=[],old=false;
-  [["c13","q13","t13"],["c2","q2","t2"]].forEach(function(a){
-   var x=d[a[0]];if(!x||x.q==null)return;CUR[a[0]]=x.q;
-   $(a[1]).textContent=nf(x.q);
-   $(a[2]).textContent=arrow(x.trend)+(x.wl!=null?" · ระดับ "+x.wl.toFixed(2)+" ม.รทก.":"");
-   if(x.timeUtc){NT[a[0]]=bkk(x.timeUtc);ts.push(bkk(x.timeUtc));if(Date.now()-new Date(x.timeUtc).getTime()>6*3600000)old=true}
+  ["c13","c2"].forEach(function(k){
+   var x=d[k];if(!x||x.q==null)return;
+   CUR[k]=x.q;if(x.qmax)QMAX[k]=x.qmax;
+   if(x.timeUtc)NT[k]=bkk(x.timeUtc);
   });
-  updCap();updNorth();
-  $("damNote").textContent=ts.length?(old?"⚠ ข้อมูลเขื่อนเก่า ล่าสุด ":"ข้อมูลเขื่อนล่าสุด ")+ts[0]+" น. (กรมชลประทาน อัปเดตอัตโนมัติ)":"ดึงข้อมูลเขื่อนอัตโนมัติไม่ได้ ใช้ค่าที่บันทึกด้วยมือ (4 ต.ค. 06:00 น.)";
-  if(!d.c2||d.c2.q==null)$("damNote").textContent+=" · ไม่พบค่า C.2 ในข้อมูลกรมชลประทานตอนนี้";
- }).catch(function(e){$("damNote").textContent="ดึงข้อมูลเขื่อนอัตโนมัติไม่ได้ ใช้ค่าที่บันทึกด้วยมือ (4 ต.ค. 06:00 น.)"+(e&&e.error?" · สาเหตุ: "+e.error:"");if(CUR.c2==null){$("nHead").textContent="ยังดึงข้อมูลไม่ได้";$("nHead").style.color="var(--mut)"}});
+  updNorth();drawRiver(d);
+ }).catch(function(e){
+  if(!$("riverBody").innerHTML){$("riverTime").textContent="ยังดึงข้อมูลไม่ได้"+(e&&e.error?" · สาเหตุ: "+e.error:"")}
+  if(CUR.c2==null){$("nHead").textContent="ยังดึงข้อมูลไม่ได้";$("nHead").style.color="var(--mut)"}
+ });
 }
 loadDam();setInterval(loadDam,900000);
 
 /* ===== ฟังก์ชันช่วย ===== */
 function dlab(iso){var m=iso.match(/(\d{4})-(\d{2})-(\d{2})/);return (+m[3])+" "+TH[+m[2]]}
-function updCap(){
- [["c13","cap13"],["c2","cap2"]].forEach(function(a){
-  var q=CUR[a[0]],m=QMAX[a[0]],el=$(a[1]);
-  if(q!=null&&m)el.textContent="ใช้ความจุลำน้ำประมาณ "+Math.round(q/m*100)+"% (รับได้ "+nf(m)+")";
- });
-}
-
-
 /* ===== สรุปน้ำจากภาคเหนือ (อ้างอิง C.2) ===== */
 var NLV=[
  {c:"#2e7d32",tc:"#2e7d32",t:"ปกติ",r:"ต่ำกว่า 2,500"},
@@ -284,8 +283,29 @@ function cx(d){return CAL.x0+(d-0.5)/365*CAL.xw}
 function cy(v){return CAL.y0-CAL.k*v}
 function doyOf(iso){var m=iso.match(/(\d{4})-(\d{2})-(\d{2})/);return Math.round((Date.UTC(+m[1],+m[2]-1,+m[3])-Date.UTC(+m[1],0,0))/86400000)}
 function todayIso(){return new Date(Date.now()+7*3600000).toISOString().slice(0,10)}
-var YEAR_DONE=false,YEAR_FAIL=false,YEAR_ERR="",YEAR_TLS=false;
-var TLS_NOTE="<br>หมายเหตุ: เว็บ สสน. ส่งใบรับรองความปลอดภัยมาไม่ครบ ระบบจึงตรวจใบรับรองของข้อมูลเส้นนี้ไม่ได้";
+var YEAR_DONE=false,YEAR_FAIL=false,YEAR_FILE_END="";
+var AVGM=[330,394,407,376,485,579,534,766,1344,1725,1049,449]; // ค่าเฉลี่ยรายเดือน 30 ปี (2531-2560) ของ C.2 หน่วย ลบ.ม./วินาที เรียง ม.ค.-ธ.ค. (แปลงจากปริมาณน้ำรายเดือนในรายงานกรมชลประทาน)
+var MDAYS=[31,28,31,30,31,30,31,31,30,31,30,31];
+function avgSvg(){
+ var pts=[],c=0,m;
+ for(m=0;m<12;m++){pts.push([cx(c+MDAYS[m]/2+0.5),cy(AVGM[m])]);c+=MDAYS[m]}
+ pts.unshift([cx(1),cy(AVGM[0])]);pts.push([cx(365),cy(AVGM[11])]);
+ var d="M"+pts[0][0].toFixed(1)+","+pts[0][1].toFixed(1);
+ for(var i=0;i<pts.length-1;i++){
+  var p0=pts[Math.max(0,i-1)],p1=pts[i],p2=pts[i+1],p3=pts[Math.min(pts.length-1,i+2)];
+  var c1=[p1[0]+(p2[0]-p0[0])/6,p1[1]+(p2[1]-p0[1])/6],c2=[p2[0]-(p3[0]-p1[0])/6,p2[1]-(p3[1]-p1[1])/6];
+  d+=" C"+c1[0].toFixed(1)+","+c1[1].toFixed(1)+" "+c2[0].toFixed(1)+","+c2[1].toFixed(1)+" "+p2[0].toFixed(1)+","+p2[1].toFixed(1);
+ }
+ var mo=new Date(Date.now()+7*3600000).getUTCMonth(),lp=pts[mo+1];
+ return '<path d="'+d+'" fill="none" stroke="#fff" stroke-width="9" opacity=".7" stroke-linecap="round"/>'
+  +'<path d="'+d+'" fill="none" stroke="#7b1fa2" stroke-width="4.5" stroke-dasharray="12 8" stroke-linecap="round"/>'
+  +'<text x="'+(lp[0]+16).toFixed(1)+'" y="'+(lp[1]+40).toFixed(1)+'" font-size="24" font-weight="700" fill="#7b1fa2" stroke="#fff" stroke-width="6" paint-order="stroke">เฉลี่ย 30 ปี '+nf(AVGM[mo])+'</text>';
+}
+function avgNote(q){
+ var mo=new Date(Date.now()+7*3600000).getUTCMonth(),a=AVGM[mo],pc=Math.round((q-a)/a*100);
+ var rel=Math.abs(pc)<=3?"ใกล้เคียงค่าเฉลี่ย":(pc>0?"สูงกว่าค่าเฉลี่ยประมาณ "+pc+"%":"ต่ำกว่าค่าเฉลี่ยประมาณ "+(-pc)+"%");
+ return "<br>ค่าเฉลี่ย 30 ปีของเดือน "+TH[mo+1]+" ≈ "+nf(a)+" · ตอนนี้"+rel;
+}
 function drawYear(){
  if(!YEAR||!YEAR.length)return;
  var pts=YEAR.slice(),live=CUR.c2,td=todayIso();
@@ -294,68 +314,44 @@ function drawYear(){
  var xy=pts.map(function(p){return [cx(doyOf(p.date)),cy(p.q)]});
  var last=pts[pts.length-1],L=xy[xy.length-1];
  var line=xy.map(function(a){return a[0].toFixed(1)+","+a[1].toFixed(1)}).join(" ");
- $("cmpSvg").innerHTML='<polyline points="'+line+'" fill="none" stroke="#fff" stroke-width="9" stroke-linejoin="round" stroke-linecap="round" opacity=".75"/>'
+ $("cmpSvg").innerHTML=avgSvg()+'<polyline points="'+line+'" fill="none" stroke="#fff" stroke-width="9" stroke-linejoin="round" stroke-linecap="round" opacity=".75"/>'
   +'<polyline points="'+line+'" fill="none" stroke="#111" stroke-width="5" stroke-linejoin="round" stroke-linecap="round"/>'
   +'<circle cx="'+L[0].toFixed(1)+'" cy="'+L[1].toFixed(1)+'" r="9" fill="#111" stroke="#fff" stroke-width="3"/>'
   +'<text x="'+(L[0]-16).toFixed(1)+'" y="'+(L[1]-14).toFixed(1)+'" text-anchor="end" font-size="28" font-weight="700" fill="#111" stroke="#fff" stroke-width="6" paint-order="stroke">ปีนี้ '+nf(last.q)+'</text>';
  if(!YEAR_DONE)return;
  $("cmpHead").style.color="var(--tx)";
- var part=YEAR_GAPS?"<br>ข้อมูลบางช่วงยังขาด":"";
+ var note="เส้นดำคือของปีนี้ (ข้อมูลย้อนหลังถึง "+dlab(YEAR_FILE_END)+")";
  if(live!=null){
   $("cmpHead").textContent="ตอนนี้ "+nf(live)+" ลบ.ม./วินาที";
-  $("cmpSub").innerHTML="ค่าล่าสุด"+(NT.c2?" "+NT.c2+" น.":"")+"<br>เดือนก่อนๆ ดึงข้อมูลมา เดือนละ 2 จุด<br>เดือนนี้ ดึงข้อมูลแบบรายวัน จาก สสน. ·<br>เส้นดำคือของปีนี้"+part+(YEAR_TLS?TLS_NOTE:"");
+  $("cmpSub").innerHTML="ค่าล่าสุด"+(NT.c2?" "+NT.c2+" น.":"")+"<br>"+note+avgNote(live);
  }else{
   $("cmpHead").textContent="ล่าสุด "+nf(last.q)+" ลบ.ม./วินาที";
-  $("cmpSub").innerHTML="ค่ารายวันล่าสุดของ "+dlab(last.date)+"<br>เดือนก่อนๆ ดึงข้อมูลมา เดือนละ 2 จุด<br>เดือนนี้ ดึงข้อมูลแบบรายวัน จาก สสน. ·<br>เส้นดำคือของปีนี้"+part+(YEAR_TLS?TLS_NOTE:"");
+  $("cmpSub").innerHTML="ค่าล่าสุดของ "+dlab(last.date)+"<br>"+note;
  }
 }
 function drawYearLive(){
  var q=CUR.c2;
  if(q==null)return;
  var L=[cx(doyOf(todayIso())),cy(q)];
- $("cmpSvg").innerHTML='<circle cx="'+L[0].toFixed(1)+'" cy="'+L[1].toFixed(1)+'" r="11" fill="#111" stroke="#fff" stroke-width="4"/>'
+ $("cmpSvg").innerHTML=avgSvg()+'<circle cx="'+L[0].toFixed(1)+'" cy="'+L[1].toFixed(1)+'" r="11" fill="#111" stroke="#fff" stroke-width="4"/>'
   +'<text x="'+(L[0]-18).toFixed(1)+'" y="'+(L[1]-16).toFixed(1)+'" text-anchor="end" font-size="28" font-weight="700" fill="#111" stroke="#fff" stroke-width="6" paint-order="stroke">ปีนี้ '+nf(q)+'</text>';
  $("cmpHead").style.color="var(--tx)";
  $("cmpHead").textContent="ตอนนี้ "+nf(q)+" ลบ.ม./วินาที";
- $("cmpSub").innerHTML="ค่าล่าสุด"+(NT.c2?" "+NT.c2+" น.":"")+"<br>ยังดึงเส้นย้อนหลังของปีนี้ไม่ได้ จึงแสดงเฉพาะจุดของวันนี้<br>สาเหตุ: "+YEAR_ERR;
+ $("cmpSub").innerHTML="ค่าล่าสุด"+(NT.c2?" "+NT.c2+" น.":"")+"<br>แสดงเฉพาะจุดของวันนี้เทียบกับกราฟสถิติ<br>ยังไม่มีข้อมูลเส้นย้อนหลังของปีนี้"+avgNote(q);
 }
-var YEAR_GAPS=false;
-function getMonth(mm,retry){
- return fetch("/api/year?m="+mm).then(function(r){
-  return r.json().then(function(j){if(r.ok&&j.tlsRelaxed)YEAR_TLS=true;return r.ok?j.points:Promise.reject(j)},function(){return Promise.reject({error:"เซิร์ฟเวอร์ตอบกลับ "+r.status})});
- }).catch(function(e){
-  if(retry<1)return new Promise(function(res){setTimeout(res,1500)}).then(function(){return getMonth(mm,retry+1)});
-  throw e;
+/* เส้นย้อนหลังของปีนี้อ่านจากไฟล์ data/c2-2026.json (ถ้ามี) รูปแบบ {"points":[{"date":"2026-01-01","q":420},...]} */
+function loadYear(){
+ fetch("data/c2-2026.json",{cache:"no-cache"}).then(function(r){return r.ok?r.json():Promise.reject()}).then(function(d){
+  var pts=(d.points||[]).filter(function(p){return p&&p.date&&typeof p.q==="number"}).sort(function(a,b){return a.date<b.date?-1:1});
+  if(pts.length<2)throw 0;
+  YEAR=pts;YEAR_FILE_END=pts[pts.length-1].date;YEAR_DONE=true;YEAR_FAIL=false;drawYear();
+ }).catch(function(){
+  YEAR=null;YEAR_DONE=false;YEAR_FAIL=true;
+  if(CUR.c2==null){$("cmpHead").style.color="var(--mut)";$("cmpHead").textContent="กำลังโหลดค่าล่าสุด…";$("cmpSub").textContent=""}
+  drawYearLive();
  });
 }
-function loadYear(){
- var cm=new Date(Date.now()+7*3600000).getUTCMonth()+1,m=1,map={},lastErr="";
- YEAR_DONE=false;YEAR_GAPS=false;YEAR_FAIL=false;
- $("cmpHead").style.color="var(--mut)";
- $("cmpHead").textContent="กำลังโหลดข้อมูลปีนี้…";
- function finish(){
-  var arr=Object.keys(map).sort().map(function(k){return map[k]});
-  if(arr.length<2){
-   YEAR_FAIL=true;YEAR_ERR=lastErr||"ไม่ทราบ";
-   $("cmpHead").textContent="ยังดึงข้อมูลปีนี้ไม่ได้";
-   $("cmpSub").textContent="สาเหตุ: "+YEAR_ERR+" · กราฟสถิติด้านล่างยังดูได้";
-   drawYearLive();
-   return;
-  }
-  YEAR=arr;YEAR_DONE=true;drawYear();
- }
- function next(){
-  if(m>cm){finish();return}
-  var mm=m++;
-  $("cmpSub").textContent="กำลังโหลดเดือนที่ "+mm+" จาก "+cm+"…";
-  getMonth(mm,0).then(function(pts){
-   pts.forEach(function(p){if(p.q!=null&&p.date)map[p.date]=p});
-   var arr=Object.keys(map).sort().map(function(k){return map[k]});
-   if(arr.length>=2){YEAR=arr;drawYear()}
-  }).catch(function(e){YEAR_GAPS=true;lastErr=(e&&e.error)||"เชื่อมต่อไม่ได้"}).then(next);
- }
- next();
-}
+$("cmpSvg").innerHTML=avgSvg();
 loadYear();
 
 /* ===== ปุ่มอัปเดตข้อมูล ===== */
@@ -392,6 +388,34 @@ function scrollCmpToToday(){
 }
 scrollCmpToToday();
 window.addEventListener("load",scrollCmpToToday);
+
+/* ===== แผนผังน้ำเจ้าพระยา (วาดเองจากข้อมูลเปิดของ SWOC) ===== */
+var STN=[
+ {k:"c2",code:"C.2",name:"นครสวรรค์",bank:25.70,cap:3735},
+ {k:"c13",code:"C.13",name:"ท้ายเขื่อนเจ้าพระยา (ชัยนาท)",bank:16.34,cap:2720},
+ {k:"c3",code:"C.3",name:"สิงห์บุรี",bank:13.20,cap:2997},
+ {k:"c7a",code:"C.7A",name:"อ่างทอง",bank:9.90,cap:2862},
+ {k:"c35",code:"C.35",name:"พระนครศรีอยุธยา",bank:4.35,cap:1159}
+];
+var LINKS=[{km:98,hr:24},{km:51,hr:10},{km:45,hr:8},{km:33,hr:6}];
+function drawRiver(d){
+ var h="",latest="";
+ STN.forEach(function(s,i){
+  var x=d[s.k]||{},q=x.q,wl=x.wl,cap=x.qmax||s.cap;
+  if(x.timeUtc&&(!latest||x.timeUtc>latest))latest=x.timeUtc;
+  var pct=(q!=null&&cap)?Math.round(q/cap*100):null;
+  var col=pct==null?"#9aa5b1":pct>100?"#c62828":pct>=85?"#d14900":pct>=60?"#f9a825":"#2e7d32";
+  var tr=x.trend==="เพิ่มขึ้น"?" ↑":x.trend==="ลดลง"?" ↓":x.trend?" →":"";
+  h+='<div class="rv-node"><div class="rv-head"><span><b>'+s.code+'</b> '+s.name+'</span><span class="n">ตลิ่ง '+s.bank.toFixed(2)+' ม.</span></div>'
+   +'<div><span class="rv-q" style="color:'+col+'">'+(q==null?"—":nf(q))+'</span> <span class="u">ลบ.ม./วิ'+tr+'</span></div>'
+   +'<div class="n">'+(wl!=null?'ระดับน้ำ '+wl.toFixed(2)+' ม.รทก. · '+(s.bank-wl>=0?'เหลืออีก '+(s.bank-wl).toFixed(2)+' ม. ถึงตลิ่ง':'สูงกว่าตลิ่งตามรายงาน '+(wl-s.bank).toFixed(2)+' ม.'):'ไม่มีข้อมูลระดับน้ำ')+'</div>'
+   +'<div class="rv-bar"><i style="width:'+(pct==null?0:Math.min(pct,100))+'%;background:'+col+'"></i></div>'
+   +'<div class="n">'+(pct==null?'ไม่มีข้อมูลปริมาณน้ำ':'ใช้ความจุลำน้ำประมาณ '+pct+'% (รับได้ '+nf(cap)+')')+'</div></div>';
+  if(i<LINKS.length)h+='<div class="rv-link"><span class="rv-arrows"><span>▼</span><span>▼</span><span>▼</span></span><span>'+LINKS[i].km+' กม. · น้ำใช้เวลาประมาณ '+LINKS[i].hr+' ชม.</span></div>';
+ });
+ $("riverBody").innerHTML=h;
+ $("riverTime").textContent=latest?((Date.now()-new Date(latest).getTime()>6*3600000?"⚠ ข้อมูลเก่า ล่าสุด ":"ข้อมูล ")+bkk(latest)+" น."):"";
+}
 </script>
 </body>
 </html>
